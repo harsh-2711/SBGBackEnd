@@ -13,7 +13,7 @@ const router=express();
 
 
 router.post("/login",(req,res,next)=>{
-    
+    // console.log(req.body);
      const username=req.body.username
      const password=req.body.password
     db.query("select * from login where UserName=? && PassWord=?",[username,password],(err,data)=>{     
@@ -24,9 +24,22 @@ router.post("/login",(req,res,next)=>{
     }
     else
     {
-        req.session.username=username;
-        res.send("Logged in successfully");
-
+        const name = data[0].Name;
+        const isReset=data[0].IsReset;
+        db.query("select RoleName from role where RoleId = ?",[data[0].RoleId],(err,data)=>{
+            if(err){
+                console.log("Error in login.js");
+            }
+            else{
+                req.session.username=username;
+                res.send({
+                    userRole: data[0].RoleName,
+                    name: name,
+                    reset:isReset
+                });
+            }
+        });
+        
     }
         
     })
@@ -52,16 +65,31 @@ router.post("/forgot",(req,res,next)=>{
         res.status(400);
         else
         {
-            db.query("update login set isReset=? where UserName=?",[1,email],(err,data)=>{
+            db.query("update login set IsReset=?,PassWord=? where UserName=?",[1,password,email],(err,data)=>{
                  if(err)
                  res.status(400)
                  else
-                 res.status(200);
+                 res.send("Updation Successfull");
             })
         }
     });
 
     })
+
+
+  router.post("/reset",(req,res,next)=>{
+      const user=req.body.user;
+      const pass=req.body.newpass;
+      console.log(user);
+      db.query("update login set PassWord=?,IsReset=? where UserName=?",[pass,0,user],(err,data1)=>{
+          if(err)
+          res.status(400)
+          else
+          {
+              res.send("Updated Successfully")
+          }
+      })
+  })  
 
 
 module.exports=router;
