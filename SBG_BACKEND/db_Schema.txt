@@ -1,0 +1,19 @@
+Database Schema
+
+Roles
+
+Role_Id
+Role_Name
+
+
+User
+
+UserName
+PassWord
+Name
+Contact
+Role_Id
+IsReset
+
+
+
