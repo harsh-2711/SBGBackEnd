@@ -4,7 +4,7 @@ const router=express();
 
 
 router.post("/login",(req,res,next)=>{
-    console.log(req.body);
+    
      const username=req.body.username
      const password=req.body.password
     db.query("select * from login where UserName=? && PassWord=?",[username,password],(err,data)=>{     
