@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 25, 2020 at 08:13 AM
+-- Generation Time: Apr 26, 2020 at 03:18 PM
 -- Server version: 5.7.23
 -- PHP Version: 7.2.10
 
@@ -25,6 +25,31 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `club`
+--
+
+DROP TABLE IF EXISTS `club`;
+CREATE TABLE IF NOT EXISTS `club` (
+  `ClubId` int(11) NOT NULL AUTO_INCREMENT,
+  `ClubName` varchar(100) NOT NULL,
+  `ClubEmail` varchar(100) NOT NULL,
+  `IsComm` tinyint(1) NOT NULL,
+  `Convener` int(100) DEFAULT NULL,
+  `DConvener` int(100) DEFAULT NULL,
+  PRIMARY KEY (`ClubId`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `club`
+--
+
+INSERT INTO `club` (`ClubId`, `ClubName`, `ClubEmail`, `IsComm`, `Convener`, `DConvener`) VALUES
+(1, 'Sports Club', 'sports@gmail.com', 0, NULL, NULL),
+(2, 'CMC', 'cmc@gmail.com', 1, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `login`
 --
 
@@ -34,18 +59,19 @@ CREATE TABLE IF NOT EXISTS `login` (
   `PassWord` varchar(50) NOT NULL,
   `Name` varchar(100) NOT NULL,
   `Contact` bigint(11) NOT NULL,
-  `Role_ID` int(11) NOT NULL,
-  `isReset` tinyint(1) NOT NULL,
+  `RoleId` int(11) NOT NULL,
+  `IsReset` tinyint(1) NOT NULL,
   PRIMARY KEY (`UserName`),
-  KEY `login_ibfk_1` (`Role_ID`)
+  KEY `login_ibfk_1` (`RoleId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `login`
 --
 
-INSERT INTO `login` (`UserName`, `PassWord`, `Name`, `Contact`, `Role_ID`, `isReset`) VALUES
-('aman.sharma122111@gmail.com', 'xyz$123', 'Aman Sharma', 8320069325, 1, 0);
+INSERT INTO `login` (`UserName`, `PassWord`, `Name`, `Contact`, `RoleId`, `IsReset`) VALUES
+('aman.sharma122111@gmail.com', 'abc$123', 'Aman Sharma', 8320069325, 1, 0),
+('user@one.com', 'user123', 'User One', 0, 5, 0);
 
 -- --------------------------------------------------------
 
@@ -55,20 +81,23 @@ INSERT INTO `login` (`UserName`, `PassWord`, `Name`, `Contact`, `Role_ID`, `isRe
 
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE IF NOT EXISTS `role` (
-  `Role_ID` int(11) NOT NULL,
-  `Role_Name` varchar(15) NOT NULL,
-  PRIMARY KEY (`Role_ID`)
+  `RoleId` int(11) NOT NULL,
+  `RoleName` varchar(15) NOT NULL,
+  PRIMARY KEY (`RoleId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `role`
 --
 
-INSERT INTO `role` (`Role_ID`, `Role_Name`) VALUES
+INSERT INTO `role` (`RoleId`, `RoleName`) VALUES
 (1, 'SBG'),
-(2, 'Student'),
-(3, 'Dean'),
-(4, 'Manager');
+(2, 'Dean'),
+(3, 'Student'),
+(4, 'Convener'),
+(5, 'Deputy Convener'),
+(6, 'Treasurer'),
+(7, 'Secretary');
 
 --
 -- Constraints for dumped tables
@@ -78,7 +107,7 @@ INSERT INTO `role` (`Role_ID`, `Role_Name`) VALUES
 -- Constraints for table `login`
 --
 ALTER TABLE `login`
-  ADD CONSTRAINT `login_ibfk_1` FOREIGN KEY (`Role_ID`) REFERENCES `role` (`Role_ID`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `login_ibfk_1` FOREIGN KEY (`RoleId`) REFERENCES `role` (`RoleId`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
