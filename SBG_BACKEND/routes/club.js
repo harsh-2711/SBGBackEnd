@@ -6,13 +6,11 @@ const router=express()
 router.post("/add_club",(req,res,next)=>{
     const name=req.body.clubname;
     const email=req.body.clubemail;
-    const iscomm=req.body.iscomm;
     const convener=req.body.convener;
     const dconvener=req.body.dconvener;
     postdata={
         ClubName:name,
         ClubEmail:email,
-        IsComm:iscomm,
         Convener:convener,
         DConvener:dconvener
     }
@@ -50,12 +48,11 @@ router.put("/edit_club",(req,res,next)=>{
     const id=req.body.id;
     const name=req.body.clubname;
     const email=req.body.clubemail;
-    const iscomm=req.body.iscomm;
     const convener=req.body.convener;
     const dconvener=req.body.dconvener;
 
 
-    db.query("update club set ClubName=?,ClubEmail=?,IsComm=?,Convener=?,DConvener=? where ClubId=?",[name,email,iscomm,convener,dconvener,id],(err,data)=>{
+    db.query("update club set ClubName=?,ClubEmail=?,Convener=?,DConvener=? where ClubId=?",[name,email,convener,dconvener,id],(err,data)=>{
 
         if(err)
         res.send(400)
@@ -65,13 +62,12 @@ router.put("/edit_club",(req,res,next)=>{
     })
 })
 
-router.get("/delete_club/:id",(req,res,next)=>{
+router.delete("/delete_club/:id",(req,res,next)=>{
     db.query("delete from club where ClubId=?",[req.params.id],(err,data)=>{
         if(err)
         res.status(400)
         else
         res.send("Club has been deleted");
-
     })
 })
 
