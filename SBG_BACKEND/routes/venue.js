@@ -6,8 +6,12 @@ const router=express()
 router.post("/add_venue",(req,res,next)=>{
     const name=req.body.name
     const cap=req.body.cap;
-    const hasac=req.body.hasac;
-    const hasproj=req.body.hasproj;
+    let hasac=req.body.hasac;
+    let hasproj=req.body.hasproj;
+    if(hasac=='')
+    hasac=0
+    if(hasproj=='')
+    hasproj=0
     postdata={
         VenueName:name,
         Capacity:cap,
@@ -18,9 +22,52 @@ router.post("/add_venue",(req,res,next)=>{
         if(err)
         res.status(400)
         else
-        {
-            res.send("Venue has been added");
+        {            
+        res.send(data1);
+           
         }
+    })
+})
+
+
+
+
+router.post("/add_venueman",(req,res,next)=>{
+   
+    const data={
+        VenueId:req.body.VenueId,
+        Email:req.body.Email
+    }
+    db.query("insert into venueman set ?",data,(err,data1)=>{
+        if(err)
+        res.status(400)
+        else
+        res.send("Added");
+    })
+})
+
+
+router.post("/get_venueman",(req,res,next)=>{
+    const id=req.body.id;
+    
+    db.query("select * from venueman where VenueId=?",[id],(err,data)=>{
+        if(err)
+        res.status(400)
+        else
+        {
+        res.send(data);
+        }
+    })
+})
+
+router.post("/delete_venueman",(req,res,next)=>{
+    const VenueId=req.body.VenueId
+    console.log(VenueId);
+    db.query("delete from venueman where VenueId=?",[VenueId],(err,data)=>{
+        if(err)
+        res.status(400)
+        else
+        res.send("Deleted")
     })
 })
 
@@ -48,7 +95,7 @@ router.get("/venue/:id",(req,res,next)=>{
 
 
 router.put("/edit_venue",(req,res,next)=>{
-  console.log(req.body)
+  
     const id=req.body.id;
     const name=req.body.name;
     const cap=req.body.cap;
