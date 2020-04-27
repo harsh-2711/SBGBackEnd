@@ -37,9 +37,28 @@ router.get("/club",(req,res,next)=>{
 router.get("/club/:id",(req,res,next)=>{
     db.query("select * from club where ClubId=?",[req.params.id],(err,data)=>{
         if(err)
-        res.status(400)
-        else
-        res.send(data);
+            res.status(400);
+        else{
+            if(data[0]!=null){
+                let responseData=data[0];
+                db.query("select UserName,Name,Contact from login where UserName=?",[data[0].Convener],(err,convenerData)=>{
+                    if(convenerData[0]!=null && convenerData[0]!=undefined){
+                        responseData.ConvenerName = convenerData[0].Name;
+                        responseData.ConvenerEmail = convenerData[0].UserName;
+                        responseData.ConvenerContact = convenerData[0].Contact;
+                    }
+                    db.query("select UserName,Name,Contact from login where UserName=?",[data[0].DConvener],(err,dConvenerData)=>{
+                        if(dConvenerData[0]!=null && dConvenerData[0]!=undefined){
+                            responseData.DConvenerName = dConvenerData[0].Name;
+                            responseData.DConvenerEmail = dConvenerData[0].UserName;
+                            responseData.DConvenerContact = dConvenerData[0].Contact;
+                        }
+                        res.send(responseData);
+                    });
+                });
+            }
+        }            
+        // res.send("error occured in selecting the data");
     })
 })
 
