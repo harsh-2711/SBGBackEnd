@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 28, 2020 at 08:29 AM
+-- Generation Time: Apr 28, 2020 at 12:16 PM
 -- Server version: 5.7.23
 -- PHP Version: 7.2.10
 
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `club` (
 --
 
 INSERT INTO `club` (`ClubId`, `ClubName`, `ClubEmail`, `Convener`, `DConvener`) VALUES
-(5, 'Microsoft Club', 'mstc@daiict.ac.in', 'aman.sharma122111@gmail.com', NULL),
+(1, 'Microsoft Club', 'mstc@daiict.ac.in', 'aman.sharma122111@gmail.com', NULL),
 (6, 'Synapse Committee', 'synapse@daiict.ac.in', 'user@one.com', NULL),
 (7, 'Sports committee', 'sports@daiict.ac.in', NULL, NULL);
 
@@ -86,14 +86,22 @@ CREATE TABLE IF NOT EXISTS `communication` (
 
 DROP TABLE IF EXISTS `event`;
 CREATE TABLE IF NOT EXISTS `event` (
-  `EventId` int(11) NOT NULL,
+  `EventId` int(11) NOT NULL AUTO_INCREMENT,
+  `EventName` varchar(100) NOT NULL,
   `VenueId` int(11) NOT NULL,
   `ClubId` int(11) NOT NULL,
   `StartDateTime` varchar(50) NOT NULL,
   `EndDateTime` varchar(50) NOT NULL,
   `StatusId` int(11) NOT NULL,
   PRIMARY KEY (`EventId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `event`
+--
+
+INSERT INTO `event` (`EventId`, `EventName`, `VenueId`, `ClubId`, `StartDateTime`, `EndDateTime`, `StatusId`) VALUES
+(1, 'Program Event', 2, 1, '28-04-2020', '28-04-2020', 1);
 
 -- --------------------------------------------------------
 
@@ -103,11 +111,12 @@ CREATE TABLE IF NOT EXISTS `event` (
 
 DROP TABLE IF EXISTS `eventguest`;
 CREATE TABLE IF NOT EXISTS `eventguest` (
+  `GuestId` int(11) NOT NULL AUTO_INCREMENT,
   `GuestName` varchar(100) NOT NULL,
   `EventId` int(11) NOT NULL,
   `Description` longtext NOT NULL,
-  PRIMARY KEY (`GuestName`,`EventId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`GuestId`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -117,11 +126,20 @@ CREATE TABLE IF NOT EXISTS `eventguest` (
 
 DROP TABLE IF EXISTS `eventsponsers`;
 CREATE TABLE IF NOT EXISTS `eventsponsers` (
+  `SponserId` int(11) NOT NULL AUTO_INCREMENT,
   `EventId` int(11) NOT NULL,
   `SponserName` varchar(50) NOT NULL,
   `SponserLink` varchar(100) NOT NULL,
-  PRIMARY KEY (`EventId`,`SponserName`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`SponserId`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `eventsponsers`
+--
+
+INSERT INTO `eventsponsers` (`SponserId`, `EventId`, `SponserName`, `SponserLink`) VALUES
+(1, 1, 'Realme', 'realme@gmail.com'),
+(2, 1, 'Google', 'google.com');
 
 -- --------------------------------------------------------
 
@@ -146,6 +164,7 @@ CREATE TABLE IF NOT EXISTS `login` (
 --
 
 INSERT INTO `login` (`UserName`, `PassWord`, `Name`, `Contact`, `RoleId`, `IsReset`) VALUES
+('201912120@daiict.ac.in', 'aman$123', 'Aman', 8320069325, 3, 0),
 ('aman.sharma122111@gmail.com', 'abc$123', 'Aman Sharma', 8320069325, 2, 0),
 ('user@one.com', 'user123', 'User One', 0, 5, 0);
 
@@ -244,7 +263,7 @@ CREATE TABLE IF NOT EXISTS `venue` (
 
 INSERT INTO `venue` (`VenueId`, `VenueName`, `Capacity`, `HasAc`, `HasProj`) VALUES
 (1, 'CEP207', 40, 0, 1),
-(3, 'LAB001', 120, 0, 1),
+(2, 'LAB001', 120, 0, 1),
 (49, 'Lab003', 70, 1, 0);
 
 -- --------------------------------------------------------

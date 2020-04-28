@@ -5,6 +5,7 @@ const authRouter=require("./routes/login");
 const dataRouter=require("./routes/data");
 const clubRouter=require("./routes/club");
 const venueRouter=require("./routes/venue");
+const eventRouter=require("./routes/event");
 const session=require("express-session")
 var cors = require('cors')
 app.use(cors())
@@ -18,6 +19,7 @@ app.use(authRouter);
 app.use(dataRouter);
 app.use(clubRouter);
 app.use(venueRouter);
+app.use(eventRouter);
 const PORT = 8081;
 app.listen(PORT, () => {
   console.log("Server is Running");
