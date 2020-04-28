@@ -1,5 +1,6 @@
 const db=require("../db");
 const express=require("express");
+const uuid=require("uuid-random"); 
 const router=express()
 
 
@@ -7,20 +8,22 @@ router.post("/add_event",(req,res,next)=>{
    
     db.query("select * from status where StatusName=?",["EventRaised"],(err,data1)=>{
 
-    
+    let eventId=uuid(); // creating even id manually
+
     const data={
-        EventName:req.body.name,
-        ClubId:req.body.clubid,
-        VenueId:req.body.venueid,
-        StartDateTime:req.body.starttime,
-        EndDateTime:req.body.endtime,
+        EventId:eventId,
+        EventName:req.body.eventName,
+        ClubId:req.body.clubId,
+        VenueId:req.body.venue,
+        StartDateTime:req.body.startDateTime,
+        EndDateTime:req.body.endDateTime,
         StatusId:data1[0].StatusId
     }
     db.query("insert into event set ?",data,(err,data2)=>{
         if(err)
         res.status(400)
         else
-        res.send("Inserted");
+        res.send({insertedEventId: eventId});   // sending event id
     })
 })
 })
@@ -75,9 +78,9 @@ router.get("/get_event/:id",(req,res,next)=>{
 
 router.post("/add_guest",(req,res,next)=>{
       const data={
-          GuestName:req.body.name,
-          Description:req.body.des,
-          EventId:req.body.eventid
+          GuestName:req.body.guestName,
+          Description:req.body.guestDescription,
+          EventId:req.body.eventId
       }
 
       db.query("insert into eventguest set ?",data,(err,data1)=>{
@@ -115,9 +118,9 @@ router.get("/delete_guest/:id",(req,res,next)=>{
 
 router.post("/add_sponsor",(req,res,next)=>{
     const data={
-        SponserName:req.body.name,
-        SponserLink:req.body.link,
-        EventId:req.body.eventid
+        SponserName:req.body.sponserName,
+        SponserLink:req.body.sponserLink,
+        EventId:req.body.eventId
     }
 
     db.query("insert into eventsponsers set ?",data,(err,data1)=>{
