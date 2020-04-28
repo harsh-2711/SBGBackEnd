@@ -36,7 +36,8 @@ router.post("/add_venueman",(req,res,next)=>{
    
     const data={
         VenueId:req.body.VenueId,
-        Email:req.body.Email
+        Email:req.body.Email,
+        Name:req.body.Name
     }
     db.query("insert into venueman set ?",data,(err,data1)=>{
         if(err)
@@ -49,12 +50,12 @@ router.post("/add_venueman",(req,res,next)=>{
 
 router.post("/get_venueman",(req,res,next)=>{
     const id=req.body.id;
-    
     db.query("select * from venueman where VenueId=?",[id],(err,data)=>{
         if(err)
         res.status(400)
         else
         {
+            console.log(data);
         res.send(data);
         }
     })
@@ -62,7 +63,7 @@ router.post("/get_venueman",(req,res,next)=>{
 
 router.post("/delete_venueman",(req,res,next)=>{
     const VenueId=req.body.VenueId
-    console.log(VenueId);
+  
     db.query("delete from venueman where VenueId=?",[VenueId],(err,data)=>{
         if(err)
         res.status(400)
@@ -72,6 +73,7 @@ router.post("/delete_venueman",(req,res,next)=>{
 })
 
 router.get("/venue",(req,res,next)=>{
+    
     db.query("select * from venue",(err,data)=>{
         if(err)
         res.status(400)
@@ -82,12 +84,13 @@ router.get("/venue",(req,res,next)=>{
 
 
 router.get("/venue/:id",(req,res,next)=>{
+
     db.query("select * from venue where VenueId=?",[req.params.id],(err,data)=>{
         if(err)
         res.status(400)
         else
         {
-         
+        
         res.send(data);
         }
     })

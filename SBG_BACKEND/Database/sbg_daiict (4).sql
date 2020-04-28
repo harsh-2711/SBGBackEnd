@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 27, 2020 at 07:20 PM
+-- Generation Time: Apr 28, 2020 at 08:29 AM
 -- Server version: 5.7.23
 -- PHP Version: 7.2.10
 
@@ -21,6 +21,20 @@ SET time_zone = "+00:00";
 --
 -- Database: `sbg_daiict`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `attachments`
+--
+
+DROP TABLE IF EXISTS `attachments`;
+CREATE TABLE IF NOT EXISTS `attachments` (
+  `AttachmentId` int(11) NOT NULL,
+  `Name` varchar(100) NOT NULL,
+  `MessageId` int(11) NOT NULL,
+  PRIMARY KEY (`AttachmentId`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -46,6 +60,68 @@ INSERT INTO `club` (`ClubId`, `ClubName`, `ClubEmail`, `Convener`, `DConvener`) 
 (5, 'Microsoft Club', 'mstc@daiict.ac.in', 'aman.sharma122111@gmail.com', NULL),
 (6, 'Synapse Committee', 'synapse@daiict.ac.in', 'user@one.com', NULL),
 (7, 'Sports committee', 'sports@daiict.ac.in', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `communication`
+--
+
+DROP TABLE IF EXISTS `communication`;
+CREATE TABLE IF NOT EXISTS `communication` (
+  `MessageId` int(11) NOT NULL,
+  `MessageText` longtext NOT NULL,
+  `ReplyTo` longtext NOT NULL,
+  `EventId` int(11) NOT NULL,
+  `MessageDirection` int(11) NOT NULL,
+  `DateTime` datetime NOT NULL,
+  `IsNotified` tinyint(1) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `event`
+--
+
+DROP TABLE IF EXISTS `event`;
+CREATE TABLE IF NOT EXISTS `event` (
+  `EventId` int(11) NOT NULL,
+  `VenueId` int(11) NOT NULL,
+  `ClubId` int(11) NOT NULL,
+  `StartDateTime` varchar(50) NOT NULL,
+  `EndDateTime` varchar(50) NOT NULL,
+  `StatusId` int(11) NOT NULL,
+  PRIMARY KEY (`EventId`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `eventguest`
+--
+
+DROP TABLE IF EXISTS `eventguest`;
+CREATE TABLE IF NOT EXISTS `eventguest` (
+  `GuestName` varchar(100) NOT NULL,
+  `EventId` int(11) NOT NULL,
+  `Description` longtext NOT NULL,
+  PRIMARY KEY (`GuestName`,`EventId`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `eventsponsers`
+--
+
+DROP TABLE IF EXISTS `eventsponsers`;
+CREATE TABLE IF NOT EXISTS `eventsponsers` (
+  `EventId` int(11) NOT NULL,
+  `SponserName` varchar(50) NOT NULL,
+  `SponserLink` varchar(100) NOT NULL,
+  PRIMARY KEY (`EventId`,`SponserName`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -102,6 +178,53 @@ INSERT INTO `role` (`RoleId`, `RoleName`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `status`
+--
+
+DROP TABLE IF EXISTS `status`;
+CREATE TABLE IF NOT EXISTS `status` (
+  `StatusId` int(11) NOT NULL,
+  `StatusName` varchar(100) NOT NULL,
+  PRIMARY KEY (`StatusId`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `status`
+--
+
+INSERT INTO `status` (`StatusId`, `StatusName`) VALUES
+(1, 'EventRaised'),
+(2, 'ForwardedBySBG'),
+(3, 'Approve'),
+(4, 'Reject'),
+(5, 'ReportPending'),
+(6, 'ReportSubmitted'),
+(7, 'Finished'),
+(8, 'MessageFromDeanToSBG'),
+(9, 'MessageFromSBGToClub'),
+(10, 'MessageFromClubToSBG'),
+(11, 'MessageFromSBGToDean');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `statuschangelog`
+--
+
+DROP TABLE IF EXISTS `statuschangelog`;
+CREATE TABLE IF NOT EXISTS `statuschangelog` (
+  `LogId` int(11) NOT NULL,
+  `EventId` int(11) NOT NULL,
+  `BeforeStatus` int(11) NOT NULL,
+  `AfterStatus` int(11) NOT NULL,
+  `DateTime` datetime NOT NULL,
+  `UserName` varchar(100) NOT NULL,
+  PRIMARY KEY (`LogId`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `venue`
 --
 
@@ -133,16 +256,19 @@ INSERT INTO `venue` (`VenueId`, `VenueName`, `Capacity`, `HasAc`, `HasProj`) VAL
 DROP TABLE IF EXISTS `venueman`;
 CREATE TABLE IF NOT EXISTS `venueman` (
   `VenueId` int(11) NOT NULL,
-  `Email` varchar(100) NOT NULL
+  `Email` varchar(100) NOT NULL,
+  `Name` varchar(100) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `venueman`
 --
 
-INSERT INTO `venueman` (`VenueId`, `Email`) VALUES
-(1, 'sharma.aman1298@gmail.com'),
-(49, 'abc@gmail.com');
+INSERT INTO `venueman` (`VenueId`, `Email`, `Name`) VALUES
+(49, 'abc@gmail.com', 'Prabhunath Sharma'),
+(1, 'sharma.aman1298@gmail.com', 'Aman Sharma'),
+(3, 'maulik@gmail.com', 'Maulik Jadav'),
+(1, 'maulik@gmail.com', 'Maulik Jadav');
 
 --
 -- Constraints for dumped tables
