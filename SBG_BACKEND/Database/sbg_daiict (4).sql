@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 28, 2020 at 12:16 PM
+-- Generation Time: Apr 28, 2020 at 06:27 PM
 -- Server version: 5.7.23
 -- PHP Version: 7.2.10
 
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `event` (
 --
 
 INSERT INTO `event` (`EventId`, `EventName`, `VenueId`, `ClubId`, `StartDateTime`, `EndDateTime`, `StatusId`) VALUES
-(1, 'Program Event', 2, 1, '28-04-2020', '28-04-2020', 1);
+(1, 'Program Event', 2, 1, '28-04-2020', '28-04-2020', 7);
 
 -- --------------------------------------------------------
 
@@ -232,14 +232,24 @@ INSERT INTO `status` (`StatusId`, `StatusName`) VALUES
 
 DROP TABLE IF EXISTS `statuschangelog`;
 CREATE TABLE IF NOT EXISTS `statuschangelog` (
-  `LogId` int(11) NOT NULL,
+  `LogId` int(11) NOT NULL AUTO_INCREMENT,
   `EventId` int(11) NOT NULL,
-  `BeforeStatus` int(11) NOT NULL,
+  `BeforeStatus` int(11) DEFAULT NULL,
   `AfterStatus` int(11) NOT NULL,
-  `DateTime` datetime NOT NULL,
+  `DateTime` varchar(75) NOT NULL,
   `UserName` varchar(100) NOT NULL,
   PRIMARY KEY (`LogId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `statuschangelog`
+--
+
+INSERT INTO `statuschangelog` (`LogId`, `EventId`, `BeforeStatus`, `AfterStatus`, `DateTime`, `UserName`) VALUES
+(1, 1, 1, 2, 'Tue Apr 28 2020 23:05:42', 'aman.sharma122111@gmail.com'),
+(2, 1, 2, 3, 'Tue Apr 28 2020 23:11:03', 'aman.sharma122111@gmail.com'),
+(3, 1, 2, 4, 'Tue Apr 28 2020 23:15:01', 'aman.sharma122111@gmail.com'),
+(4, 1, 6, 7, 'Tue Apr 28 2020 23:38:03', 'aman.sharma122111@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -255,16 +265,16 @@ CREATE TABLE IF NOT EXISTS `venue` (
   `HasAc` tinyint(1) NOT NULL,
   `HasProj` tinyint(1) NOT NULL,
   PRIMARY KEY (`VenueId`)
-) ENGINE=MyISAM AUTO_INCREMENT=50 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `venue`
 --
 
 INSERT INTO `venue` (`VenueId`, `VenueName`, `Capacity`, `HasAc`, `HasProj`) VALUES
-(1, 'CEP207', 40, 0, 1),
+(1, 'CEP207', 40, 1, 1),
 (2, 'LAB001', 120, 0, 1),
-(49, 'Lab003', 70, 1, 0);
+(50, 'Mini-Auditorium(CEP)', 70, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -285,9 +295,10 @@ CREATE TABLE IF NOT EXISTS `venueman` (
 
 INSERT INTO `venueman` (`VenueId`, `Email`, `Name`) VALUES
 (49, 'abc@gmail.com', 'Prabhunath Sharma'),
-(1, 'sharma.aman1298@gmail.com', 'Aman Sharma'),
+(1, 'maulik@gmail.com', 'Maulik Jadav'),
 (3, 'maulik@gmail.com', 'Maulik Jadav'),
-(1, 'maulik@gmail.com', 'Maulik Jadav');
+(1, 'sharma.aman1298@gmail.com', 'Aman Sharma'),
+(50, 'prabhunath@gmail.com', 'Prabhunath Sharma');
 
 --
 -- Constraints for dumped tables
