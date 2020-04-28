@@ -11,6 +11,24 @@ const transport=nodemailer.createTransport({
     });
 const router=express();
 
+router.post("/register",(req,res,next)=>{
+    const postdata={
+        UserName:req.body.username,
+        PassWord:req.body.password,
+        Name:req.body.name,
+        Contact:req.body.contact,
+        RoleId:3,
+        IsReset:0
+    }
+    db.query("insert into login set ?",postdata,
+    (err,data)=>{ 
+        if(err)
+            res.status(400);
+        else    
+            res.send("Registered Successfully");
+    });
+});    
+         
 
 router.post("/login",(req,res,next)=>{
     // console.log(req.body);
