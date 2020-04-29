@@ -41,21 +41,32 @@ router.post("/add_event",(req,res,next)=>{
 })
 
 router.put("/update_event",(req,res,next)=>{
-        const eventid=req.body.eventid
-        const EventName=req.body.name
-        const ClubId=req.body.clubid
-        const VenueId=req.body.venueid
-        const StartDateTime=req.body.starttime
-        const EndDateTime=req.body.endtime
+    const eventid=req.body.eventId
+    const EventName=req.body.eventName
+    const ClubId=req.body.clubId
+    const VenueId=req.body.venue
+    const StartDateTime=req.body.startDateTime
+    const EndDateTime=req.body.endDateTime
 
-        db.query("update event set EventName=?,ClubId=?,VenueId=?,StartDateTime=?,EndDateTime=? where EventId=?",[EventName,ClubId,VenueId,StartDateTime,EndDateTime,eventid],(err,data1)=>{
-            if(err)
+    db.query("update event set EventName=?,ClubId=?,VenueId=?,StartDateTime=?,EndDateTime=? where EventId=?",[EventName,ClubId,VenueId,StartDateTime,EndDateTime,eventid],(err,data1)=>{
+        if(err)
             res.status(400)
-            else
-            res.send("Updated");
-        })
-
+        else
+            res.send("Event Updated");
+    })
 })
+
+router.get("/event/:id",(req,res,next)=>{
+    db.query(
+        `select * from event where EventId=?`,
+        [req.params.id],(err,data)=>{
+            if(err)
+                res.status(400)
+            else{
+                res.send(data);
+            }
+    })
+});
 
 router.get("/get_event",(req,res,next)=>{
     db.query("select e.EventId, e.EventName,v.VenueName,c.ClubName,e.StartDateTime,e.EndDateTime,s.StatusName from event e,club c,venue v,status s where e.VenueId=v.VenueId and e.ClubId=c.ClubId and e.StatusId=s.StatusId",(err,data)=>{
@@ -156,12 +167,12 @@ router.put("/edit_guest",(req,res,next)=>{
 })
 
 
-router.get("/delete_guest/:id",(req,res,next)=>{
-    db.query("delete from eventguest where GuestId=?",[req.params.id],(err,data)=>{
+router.delete("/delete_guests/:id",(req,res,next)=>{
+    db.query("delete from eventguest where EventId=?",[req.params.id],(err,data)=>{
         if(err)
         res.status(400)
         else
-        res.send("Deleted");
+        res.send("All the Guests Deleted");
     })
 })
 
@@ -198,8 +209,8 @@ router.put("/edit_sponsor",(req,res,next)=>{
 })
 
 
-router.get("/delete_sponser/:id",(req,res,next)=>{
-  db.query("delete from eventsponsers where SponserId=?",[req.params.id],(err,data)=>{
+router.delete("/delete_sponsers/:id",(req,res,next)=>{
+  db.query("delete from eventsponsers where EventId=?",[req.params.id],(err,data)=>{
       if(err)
       res.status(400)
       else
