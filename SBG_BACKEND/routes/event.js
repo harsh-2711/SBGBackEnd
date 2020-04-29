@@ -5,6 +5,7 @@ const router=express()
 
 
 router.post("/add_event",(req,res,next)=>{
+   const user=req.body.user;
    
     db.query("select * from status where StatusName=?",["EventRaised"],(err,data1)=>{
 
@@ -23,11 +24,28 @@ router.post("/add_event",(req,res,next)=>{
         if(err)
         res.status(400)
         else
-        res.send({insertedEventId: eventId});   // sending event id
+        {
+         const id=data2.insertId;
+         const dt=new Date();
+                const DateTime=dateformat(dt);
+                const info={
+                    EventId:id,
+                    AfterStatus:data1[0].StatusId,
+                    DateTime:DateTime,
+                    UserName:user
+                } 
+                // inserting log entry 
+              db.query("insert into statuschangelog set ?",info,(err,data2)=>{
+             if(err)
+             res.status(400)
+             else
+             res.send({insertedEventId: eventId}); 
+        })
+        }
+})
+          // sending event id
     })
 })
-})
-
 
 router.put("/update_event",(req,res,next)=>{
         const eventid=req.body.eventid
@@ -194,6 +212,7 @@ router.get("/delete_sponser/:id",(req,res,next)=>{
       res.send("Deleted");
   })
 })
+
 
 
 
