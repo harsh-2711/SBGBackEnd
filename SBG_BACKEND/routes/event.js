@@ -2,47 +2,47 @@ const db=require("../db");
 const express=require("express");
 const uuid=require("uuid-random"); 
 const router=express()
-
+const dateFormat = require('dateformat');
 
 router.post("/add_event",(req,res,next)=>{
    const user=req.body.user;
    
     db.query("select * from status where StatusName=?",["EventRaised"],(err,data1)=>{
 
-    let eventId=uuid(); // creating even id manually
+        let eventId=uuid(); // creating even id manually
 
-    const data={
-        EventId:eventId,
-        EventName:req.body.eventName,
-        ClubId:req.body.clubId,
-        VenueId:req.body.venue,
-        StartDateTime:req.body.startDateTime,
-        EndDateTime:req.body.endDateTime,
-        StatusId:data1[0].StatusId
-    }
-    db.query("insert into event set ?",data,(err,data2)=>{
-        if(err)
-        res.status(400)
-        else
-        {
-         const id=data2.insertId;
-         const dt=new Date();
-                const DateTime=dateformat(dt);
-                const info={
-                    EventId:id,
-                    AfterStatus:data1[0].StatusId,
-                    DateTime:DateTime,
-                    UserName:user
-                } 
-                // inserting log entry 
-              db.query("insert into statuschangelog set ?",info,(err,data2)=>{
-             if(err)
-             res.status(400)
-             else
-             res.send({insertedEventId: eventId}); 
-        })
+        const data={
+            EventId:eventId,
+            EventName:req.body.eventName,
+            ClubId:req.body.clubId,
+            VenueId:req.body.venue,
+            StartDateTime:req.body.startDateTime,
+            EndDateTime:req.body.endDateTime,
+            StatusId:data1[0].StatusId
         }
-})
+        db.query("insert into event set ?",data,(err,data2)=>{
+            if(err)
+                res.status(400)
+            else
+            {
+                // const id=data2.insertId;
+                // const dt=new Date();
+                // const DateTime=dateFormat(dt);
+                // const info={
+                //     EventId:id,
+                //     AfterStatus:data1[0].StatusId,
+                //     DateTime:DateTime,
+                //     UserName:user
+                // } 
+                // inserting log entry 
+                // db.query("insert into statuschangelog set ?",info,(err,data2)=>{
+                    if(err)
+                        res.status(400)
+                    else
+                        res.send({insertedEventId: eventId}); 
+            //     })
+            }
+        })
           // sending event id
     })
 })
