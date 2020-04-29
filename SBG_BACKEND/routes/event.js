@@ -1,18 +1,12 @@
 const db=require("../db");
 const express=require("express");
-const uuid=require("uuid-random"); 
 const router=express()
 const dateFormat = require('dateformat');
 
 router.post("/add_event",(req,res,next)=>{
-   const user=req.body.user;
    
-    db.query("select * from status where StatusName=?",["EventRaised"],(err,data1)=>{
-
-        let eventId=uuid(); // creating even id manually
-
+    db.query("select * from status where StatusName=?",["EventRaised"],(err,data1)=>{ 
         const data={
-            EventId:eventId,
             EventName:req.body.eventName,
             ClubId:req.body.clubId,
             VenueId:req.body.venue,
@@ -25,6 +19,7 @@ router.post("/add_event",(req,res,next)=>{
                 res.status(400)
             else
             {
+                console.log(data2)
                 // const id=data2.insertId;
                 // const dt=new Date();
                 // const DateTime=dateFormat(dt);
@@ -36,10 +31,8 @@ router.post("/add_event",(req,res,next)=>{
                 // } 
                 // inserting log entry 
                 // db.query("insert into statuschangelog set ?",info,(err,data2)=>{
-                    if(err)
-                        res.status(400)
-                    else
-                        res.send({insertedEventId: eventId}); 
+                    
+                        res.send(data2); 
             //     })
             }
         })
@@ -173,6 +166,7 @@ router.get("/delete_guest/:id",(req,res,next)=>{
 })
 
 router.post("/add_sponsor",(req,res,next)=>{
+    console.log(req.body);
     const data={
         SponserName:req.body.sponserName,
         SponserLink:req.body.sponserLink,
