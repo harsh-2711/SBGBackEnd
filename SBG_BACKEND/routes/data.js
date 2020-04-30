@@ -22,7 +22,8 @@ router.post("/data",(req,res,next)=>{
             db.query("select RoleName from role where RoleId=?",[data1[0].RoleId],(err,data2)=>{
             
               res.send({ 
-                  user:data1[0].Name,
+                 user:data1[0].Name,
+                 userEmail:user,
                  status:data1[0].IsReset,
                  role:data2[0].RoleName
               })

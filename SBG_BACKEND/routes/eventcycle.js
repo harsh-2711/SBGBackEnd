@@ -239,4 +239,46 @@ router.post("/finish",(req,res,next)=>{
     })
 })
 
+router.get("/event_log/:id",(req,res,next)=>{
+    db.query(`
+        SELECT l.Name,scl.* 
+        from login as l, statuschangelog as scl 
+        WHERE scl.UserName = l.UserName
+        order by scl.DateTime
+    `,[req.params.id],(err,data)=>{
+        if(err)
+            res.status(400);
+        else{
+            let count1=0,count2=0;;
+            data.forEach((dataItem)=>{
+                db.query(`select StatusName from status where StatusId=?`
+                ,[dataItem.BeforeStatus],(err,data1)=>{
+                    if(err) 
+                        res.status(400);
+                    else{
+                        count1++;
+                        dataItem.BeforeStatusName = data1[0].StatusName;
+                        if(count1==data.length && count2==data.length)
+                            res.send(data);
+                    }
+                });
+                db.query(`select StatusName from status where StatusId=?`
+                ,[dataItem.AfterStatus],(err,data2)=>{
+                    if(err) 
+                        res.status(400);
+                    else{
+                        count2++;
+                        dataItem.AfterStatusName = data2[0].StatusName;
+                        if(count1==data.length && count2==data.length)
+                            res.send(data);
+                    }
+                });
+            });
+                
+            
+            // res.send(data);
+        }
+    });
+});
+
 module.exports=router
