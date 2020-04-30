@@ -77,7 +77,7 @@ router.get("/event/:id",(req,res,next)=>{
 
 router.get("/event_status/:id",(req,res,next)=>{
     db.query(
-        `select StatusName 
+        `select e.StatusId,s.StatusName 
         from status as s, event as e
         where s.StatusId=e.StatusId
         and e.EventId = ?
