@@ -5,7 +5,8 @@ const dateFormat = require('dateformat');
 
 router.post("/add_event",(req,res,next)=>{
    
-    db.query("select * from status where StatusName=?",["EventRaised"],(err,data1)=>{ 
+    db.query("select * from status where StatusName=?",["EventRaised"],(err,data1)=>{
+ 
         const data={
             EventName:req.body.eventName,
             ClubId:req.body.clubId,
@@ -47,8 +48,9 @@ router.put("/update_event",(req,res,next)=>{
     const VenueId=req.body.venue
     const StartDateTime=req.body.startDateTime
     const EndDateTime=req.body.endDateTime
-
-    db.query("update event set EventName=?,ClubId=?,VenueId=?,StartDateTime=?,EndDateTime=? where EventId=?",[EventName,ClubId,VenueId,StartDateTime,EndDateTime,eventid],(err,data1)=>{
+    const updatedate=dateFormat(StartDateTime);
+    const updatedate1=dateFormat(EndDateTime);
+    db.query("update event set EventName=?,ClubId=?,VenueId=?,StartDateTime=?,EndDateTime=? where EventId=?",[EventName,ClubId,VenueId,updatedate,updatedate1,eventid],(err,data1)=>{
         if(err)
             res.status(400)
         else

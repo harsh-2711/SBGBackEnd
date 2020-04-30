@@ -1,0 +1,23 @@
+Venue Schema
+
+Venue 
+
+VenueId            // 1
+VenueName           // CEP,LT
+
+
+VenueManager
+
+VenueId  // fk
+Email    // SomeEmail
+
+
+VenuePlace
+
+VenueId //fk
+PlaceId  //pk 
+PlaceName      // CEP207,LT2
+Capacity        // 50
+HasAc           // 0
+HasProj         // 1
+IsBooked       //  0

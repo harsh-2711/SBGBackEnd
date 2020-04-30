@@ -1,0 +1,118 @@
+Changes in Relational
+
+1)Do underline in commodity_id and farmer_id
+
+2) do underline in commodity_id in invoice_details
+
+3)include a date attribute in inventory and do underline on date commodity_id farmer_id
+
+
+
+Functional Dependencies
+
+
+auction table
+
+auction_id->location
+auction_id->date
+auction_id->market_id
+auction_id->super_id
+
+Normal Form:-BCNF(As all the determinants is the super key)
+
+auction transaction
+
+(auction_id,commodity_id,farmer_id)->price
+(auction_id,commodity_id,farmer_id)->quantity
+
+
+Normal Form:-BCNF(As all the determinants is the super key)
+
+market_profile
+
+market_id->name
+market_id->location
+
+Normal Form:-BCNF(As all the determinants is the super key)
+
+
+Invoice
+
+Invoice_num->wholesaler_id
+Invoice_num->amount
+Invoice_num->date
+
+Normal Form:-BCNF(As all the determinants is the super key)
+
+
+Invoice_details
+
+(Invoice_num,commodity_id)->{}
+
+Normal Form:-BCNF(As all the determinants is the super key)
+
+
+Wholesaler
+
+Wholesaler_id->name
+Wholesaler_id->location
+Wholesaler_id->phone
+
+Normal Form:-BCNF(As all the determinants is the super key)
+
+
+Supervisor
+
+Super_id->super_name
+Super_id->location
+Super_id->phone
+
+Normal Form:-BCNF(As all the determinants is the super key)
+
+
+commodity
+
+commodity_id->commodity_name
+commodity_id->variety
+
+Normal Form:-BCNF(As all the determinants is the super key)
+
+
+Farmer
+
+farmer_id->name
+farmer_id->location
+farmer_id->phone
+
+Normal Form:-BCNF(As all the determinants is the super key)
+
+
+Inventory
+
+(commodity_id,farmer_id,date)->quantity
+(commodity_id,farmer_id,date)->purchase_price
+
+Normal Form:-BCNF(As all the determinants is the super key)
+
+
+Prices
+
+(commodity_id,date)->maximum_price
+(commodity_id,date)->minimum_price
+
+Normal Form:-BCNF(As all the determinants is the super key)
+
+Quality_check
+
+(commodity_id,farmer_id,super_id)->status_pass
+
+Normal Form:-BCNF(As all the determinants is the super key)
+
+
+
+
+
+ 
+
+
+    
