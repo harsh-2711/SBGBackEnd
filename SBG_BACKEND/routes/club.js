@@ -27,9 +27,37 @@ router.post("/add_club",(req,res,next)=>{
 router.get("/club",(req,res,next)=>{
     db.query("select * from club",(err,data)=>{
         if(err)
-        res.status(400)
-        else
-        res.send(data);
+            res.status(400)
+        else{
+            let count1=0,count2=0;
+            for(let index in data){
+                // console.log(index);
+                db.query("select Name from login where UserName=?",[data[index].Convener],
+                (err,data1)=>{
+                    count1++;
+                    if(err)
+                        res.status(400)
+                    else{
+                        data[index].ConvenerName = data1[0].Name;
+                        if(count1==data.length && count2==data.length)
+                            res.send(data);
+                    }
+                });
+                db.query("select Name from login where UserName=?",[data[index].DConvener],
+                (err,data2)=>{
+                    count2++;
+                    if(err)
+                        res.status(400)
+                    else{
+                        data[index].DConvenerName = data2[0].Name;
+                        if(count1==data.length && count2==data.length)
+                            res.send(data);
+                    }
+                });
+            }
+            
+        }
+            
     })
 })
 
