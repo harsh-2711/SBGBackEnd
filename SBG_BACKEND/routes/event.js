@@ -70,6 +70,55 @@ router.get("/event/:id",(req,res,next)=>{
     })
 });
 
+router.get("/event_status/:id",(req,res,next)=>{
+    db.query(
+        `select StatusName 
+        from status as s, event as e
+        where s.StatusId=e.StatusId
+        and e.EventId = ?
+        `,[req.params.id],(err,data)=>{
+            if(err)
+                res.status(400)
+            else{
+                res.send(data);
+            }
+    })
+});
+
+router.get("/get_events_with_status/:status",(req,res,next)=>{
+    db.query(
+        `select e.EventId, e.EventName,v.VenueName,c.ClubName,e.StartDateTime,e.EndDateTime,s.StatusName 
+        from event e,club c,venue v,status s 
+        where e.VenueId=v.VenueId 
+        and e.ClubId=c.ClubId 
+        and e.StatusId=s.StatusId
+        and s.StatusName = ?        
+        `,[req.params.status],(err,data)=>{
+            if(err)
+                res.status(400)
+            else{
+                res.send(data);
+            }
+    })
+});
+
+router.get("/get_events_for_dean",(req,res,next)=>{
+    db.query(
+        `select e.EventId, e.EventName,v.VenueName,c.ClubName,e.StartDateTime,e.EndDateTime,s.StatusName 
+        from event e,club c,venue v,status s 
+        where e.VenueId=v.VenueId 
+        and e.ClubId=c.ClubId 
+        and e.StatusId=s.StatusId
+        and s.StatusName in ("ForwardedBySBG","Approve","RejectedByDean")        
+        `,(err,data)=>{
+            if(err)
+                res.status(400)
+            else{
+                res.send(data);
+            }
+    })
+})
+
 router.get("/get_event",(req,res,next)=>{
     db.query("select e.EventId, e.EventName,v.VenueName,c.ClubName,e.StartDateTime,e.EndDateTime,s.StatusName from event e,club c,venue v,status s where e.VenueId=v.VenueId and e.ClubId=c.ClubId and e.StatusId=s.StatusId",(err,data)=>{
      if(err)
