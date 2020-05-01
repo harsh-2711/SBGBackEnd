@@ -13,12 +13,16 @@ router.post("/deanattach",(req,res,next)=>{
 
 router.post("/deanmessage",(req,res,next)=>{
 db.query("select StatusId from status where StatusName=?",["MessageFromDeanToSBG"],(err,data1)=>{
-const dt=req.body.dt;
-const dt1=datatime(dt);
+db.query("select Name from login where UserName=?",[req.body.user],(err,data2)=>{
+
+const name=data2[0].Name;
+const dt=new Date()
+const dt1=dt.toISOString().split('T')[0] + ' '  
++ dt.toTimeString().split(' ')[0]; 
 const data={
       MessageText:req.body.message,
       EventId:req.body.event,
-      UserName:req.body.user,
+      UserName:name,
       DateTime:dt1,
       MessageDirection:data1[0].StatusId,
       IsNotified:false
@@ -42,6 +46,11 @@ db.query("insert into communication set ?",data,(err,data2)=>{
         }
         db.query("select * from communication  where EventId=?  ORDER BY DateTime ASC",[req.body.event],(err,data5)=>{
           db.query("select * from attachments",(err,data3)=>{
+            for(let i=0;i<data5.length;i++)
+            {
+              data5[i].DateTime=data5[i].DateTime.toISOString().split('T')[0] + ' '  
+              + data5[i].DateTime.toTimeString().split(' ')[0]; 
+            }
               info2={
                   mes:data5,
                   attach:data3
@@ -55,22 +64,28 @@ db.query("insert into communication set ?",data,(err,data2)=>{
 })
 })
 })
+})
 
 
 router.post("/deanmessage1",(req,res,next)=>{
     console.log(req.body.event);
     db.query("select StatusId from status where StatusName=?",["MessageFromDeanToSBG"],(err,data1)=>{
-        const dt=req.body.dt;
-        const dt1=datatime(dt);
+        db.query("select Name from login where UserName=?",[req.body.user],(err,data2)=>{
+
+        const name=data2[0].Name;
+        const dt=new Date()
+         const dt1=dt.toISOString().split('T')[0] + ' '  
+         + dt.toTimeString().split(' ')[0]; 
         const data={
               MessageText:req.body.message,
               EventId:req.body.event,
-              UserName:req.body.user,
+              UserName:name,
               DateTime:dt1,
               MessageDirection:data1[0].StatusId,
               IsNotified:false
         
         }
+    
         db.query("insert into communication set ?",data,(err,data2)=>{
             if(err)
             res.status(400)
@@ -78,6 +93,11 @@ router.post("/deanmessage1",(req,res,next)=>{
             {
                 db.query("select * from communication  where EventId=?  ORDER BY DateTime ASC",[req.body.event],(err,data5)=>{
           db.query("select * from attachments",(err,data3)=>{
+              for(let i=0;i<data5.length;i++)
+              {
+                data5[i].DateTime=data5[i].DateTime.toISOString().split('T')[0] + ' '  
+                + data5[i].DateTime.toTimeString().split(' ')[0]; 
+              }
               info2={
                   mes:data5,
                   attach:data3
@@ -86,21 +106,27 @@ router.post("/deanmessage1",(req,res,next)=>{
               res.send(info2);
           })
 
-      })
+          })
             }
         })
  })
+})
 })
 
 
 router.post("/mes_data",(req,res,next)=>{
     db.query("select * from communication  where EventId=?  ORDER BY DateTime ASC",[req.body.event],(err,data5)=>{
         db.query("select * from attachments",(err,data3)=>{
+            for(let i=0;i<data5.length;i++)
+            {
+              data5[i].DateTime=data5[i].DateTime.toISOString().split('T')[0] + ' '  
+              + data5[i].DateTime.toTimeString().split(' ')[0]; 
+            }
             info2={
                 mes:data5,
                 attach:data3
             }
-           
+           console.log(info2.mes)
             res.send(info2);
         })
 })
@@ -122,12 +148,16 @@ router.post("/clubattach",(req,res,next)=>{
 
 router.post("/clubmessage",(req,res,next)=>{
     db.query("select StatusId from status where StatusName=?",["MessageFromClubToSBG"],(err,data1)=>{
-        const dt=req.body.dt;
-        const dt1=datatime(dt);
-        const data={
+        db.query("select Name from login where UserName=?",[req.body.user],(err,data2)=>{
+
+            const name=data2[0].Name;
+            const dt=new Date()
+         const dt1=dt.toISOString().split('T')[0] + ' '  
+         + dt.toTimeString().split(' ')[0]; 
+             const data={
               MessageText:req.body.message,
               EventId:req.body.event,
-              UserName:req.body.user,
+              UserName:name,
               DateTime:dt1,
               MessageDirection:data1[0].StatusId,
               IsNotified:false
@@ -149,9 +179,13 @@ router.post("/clubmessage",(req,res,next)=>{
                          db.query("insert into attachments set ?",info,(err,data3)=>{
                          })
                 }
-                db.query("select * from communication  where EventId=?  ORDER BY DateTime ASC",[req.body.event],(err,data5)=>{
+                db.query("select * from communication  where EventId=?  ORDER BY DateTime  ASC",[req.body.event],(err,data5)=>{
                   db.query("select * from attachments",(err,data3)=>{
-                      
+                    for(let i=0;i<data5.length;i++)
+                    {
+                      data5[i].DateTime=data5[i].DateTime.toISOString().split('T')[0] + ' '  
+                      + data5[i].DateTime.toTimeString().split(' ')[0]; 
+                    }
                       info2={
                           mes:data5,
                           attach:data3
@@ -163,6 +197,7 @@ router.post("/clubmessage",(req,res,next)=>{
         
               })
             }
+        })
         })
         })
         })
@@ -170,12 +205,16 @@ router.post("/clubmessage",(req,res,next)=>{
 
 router.post("/sbgmessage",(req,res,next)=>{
     db.query("select StatusId from status where StatusName=?",["MessageFromSBGToDean"],(err,data1)=>{
-        const dt=req.body.dt;
-        const dt1=datatime(dt);
-        const data={
+        db.query("select Name from login where UserName=?",[req.body.user],(err,data2)=>{
+
+            const name=data2[0].Name;  
+            const dt=new Date()
+            const dt1=dt.toISOString().split('T')[0] + ' '  
+             + dt.toTimeString().split(' ')[0]; 
+              const data={
               MessageText:req.body.message,
               EventId:req.body.event,
-              UserName:req.body.user,
+              UserName:name,
               DateTime:dt1,
               MessageDirection:data1[0].StatusId,
               IsNotified:false
@@ -197,9 +236,13 @@ router.post("/sbgmessage",(req,res,next)=>{
                          db.query("insert into attachments set ?",info,(err,data3)=>{
                          })
                 }
-                db.query("select * from communication  where EventId=?  ORDER BY DateTime ASC",[req.body.event],(err,data5)=>{
+                db.query("select * from communication  where EventId=? ORDER BY DateTime ASC",[req.body.event],(err,data5)=>{
                   db.query("select * from attachments",(err,data3)=>{
-                      
+                    for(let i=0;i<data5.length;i++)
+                    {
+                      data5[i].DateTime=data5[i].DateTime.toISOString().split('T')[0] + ' '  
+                      + data5[i].DateTime.toTimeString().split(' ')[0]; 
+                    }
                       info2={
                           mes:data5,
                           attach:data3
@@ -214,15 +257,20 @@ router.post("/sbgmessage",(req,res,next)=>{
         })
         })
         })
+        })
  
         router.post("/sbgcmessage",(req,res,next)=>{
             db.query("select StatusId from status where StatusName=?",["MessageFromSBGToClub"],(err,data1)=>{
-                const dt=req.body.dt;
-                const dt1=datatime(dt);
-                const data={
+                db.query("select Name from login where UserName=?",[req.body.user],(err,data2)=>{
+
+                    const name=data2[0].Name;
+                    const dt=new Date()
+                    const dt1=dt.toISOString().split('T')[0] + ' '  
+                    + dt.toTimeString().split(' ')[0]; 
+                      const data={
                       MessageText:req.body.message,
                       EventId:req.body.event,
-                      UserName:req.body.user,
+                      UserName:name,
                       DateTime:dt1,
                       MessageDirection:data1[0].StatusId,
                       IsNotified:false
@@ -244,9 +292,13 @@ router.post("/sbgmessage",(req,res,next)=>{
                                  db.query("insert into attachments set ?",info,(err,data3)=>{
                                  })
                         }
-                        db.query("select * from communication  where EventId=?  ORDER BY DateTime ASC",[req.body.event],(err,data5)=>{
+                        db.query("select * from communication  where EventId=? ORDER BY DateTime ASC",[req.body.event],(err,data5)=>{
                           db.query("select * from attachments",(err,data3)=>{
-                              
+                            for(let i=0;i<data5.length;i++)
+                            {
+                              data5[i].DateTime=data5[i].DateTime.toISOString().split('T')[0] + ' '  
+                              + data5[i].DateTime.toTimeString().split(' ')[0]; 
+                            }
                               info2={
                                   mes:data5,
                                   attach:data3
@@ -261,16 +313,21 @@ router.post("/sbgmessage",(req,res,next)=>{
                 })
                 })
                 })
+                })
              
  router.post("/sbgmessage1",(req,res,next)=>{
      console.log(req.body);
     db.query("select StatusId from status where StatusName=?",["MessageFromSBGToDean"],(err,data1)=>{
-        const dt=req.body.dt;
-        const dt1=datatime(dt);
-        const data={
+        db.query("select Name from login where UserName=?",[req.body.user],(err,data2)=>{
+
+            const name=data2[0].Name;   
+            const dt=new Date()
+            const dt1=dt.toISOString().split('T')[0] + ' '  
+             + dt.toTimeString().split(' ')[0]; 
+            const data={
               MessageText:req.body.message,
               EventId:req.body.event,
-              UserName:req.body.user,
+              UserName:name,
               DateTime:dt1,
               MessageDirection:data1[0].StatusId,
               IsNotified:false
@@ -281,8 +338,13 @@ router.post("/sbgmessage",(req,res,next)=>{
             res.status(400)
             else
             {
-                db.query("select * from communication  where EventId=?  ORDER BY DateTime ASC",[req.body.event],(err,data5)=>{
+                db.query("select * from communication  where EventId=? ORDER BY DateTime ASC",[req.body.event],(err,data5)=>{
           db.query("select * from attachments",(err,data3)=>{
+            for(let i=0;i<data5.length;i++)
+            {
+              data5[i].DateTime=data5[i].DateTime.toISOString().split('T')[0] + ' '  
+              + data5[i].DateTime.toTimeString().split(' ')[0]; 
+            }
               info2={
                   mes:data5,
                   attach:data3
@@ -293,19 +355,24 @@ router.post("/sbgmessage",(req,res,next)=>{
 
       })
             }
-        })
- })  
+     })
+  })  
  })   
+})
  
  router.post("/sbgcmessage1",(req,res,next)=>{
     console.log(req.body);
    db.query("select StatusId from status where StatusName=?",["MessageFromSBGToClub"],(err,data1)=>{
-       const dt=req.body.dt;
-       const dt1=datatime(dt);
+    db.query("select Name from login where UserName=?",[req.body.user],(err,data2)=>{
+
+        const name=data2[0].Name;
+        const dt=new Date()
+        const dt1=dt.toISOString().split('T')[0] + ' '  
+         + dt.toTimeString().split(' ')[0]; 
        const data={
              MessageText:req.body.message,
              EventId:req.body.event,
-             UserName:req.body.user,
+             UserName:name,
              DateTime:dt1,
              MessageDirection:data1[0].StatusId,
              IsNotified:false
@@ -318,10 +385,16 @@ router.post("/sbgmessage",(req,res,next)=>{
            {
                db.query("select * from communication  where EventId=?  ORDER BY DateTime ASC",[req.body.event],(err,data5)=>{
          db.query("select * from attachments",(err,data3)=>{
+            for(let i=0;i<data5.length;i++)
+            {
+              data5[i].DateTime=data5[i].DateTime.toISOString().split('T')[0] + ' '  
+              + data5[i].DateTime.toTimeString().split(' ')[0]; 
+            }
              info2={
                  mes:data5,
                  attach:data3
              }
+             console.log(info2.mes);
              
              res.send(info2);
          })
@@ -331,15 +404,20 @@ router.post("/sbgmessage",(req,res,next)=>{
        })
 })  
 })       
+})
 router.post("/clubmessage1",(req,res,next)=>{
     console.log(req.body);
    db.query("select StatusId from status where StatusName=?",["MessageFromClubToSBG"],(err,data1)=>{
-       const dt=req.body.dt;
-       const dt1=datatime(dt);
+    db.query("select Name from login where UserName=?",[req.body.user],(err,data2)=>{
+
+        const name=data2[0].Name;
+        const dt=new Date()
+        const dt1=dt.toISOString().split('T')[0] + ' '  
+         + dt.toTimeString().split(' ')[0]; 
        const data={
              MessageText:req.body.message,
              EventId:req.body.event,
-             UserName:req.body.user,
+             UserName:name,
              DateTime:dt1,
              MessageDirection:data1[0].StatusId,
              IsNotified:false
@@ -352,6 +430,11 @@ router.post("/clubmessage1",(req,res,next)=>{
            {
                db.query("select * from communication  where EventId=?  ORDER BY DateTime ASC",[req.body.event],(err,data5)=>{
          db.query("select * from attachments",(err,data3)=>{
+            for(let i=0;i<data5.length;i++)
+            {
+              data5[i].DateTime=data5[i].DateTime.toISOString().split('T')[0] + ' '  
+              + data5[i].DateTime.toTimeString().split(' ')[0]; 
+            }
              info2={
                  mes:data5,
                  attach:data3
@@ -364,7 +447,8 @@ router.post("/clubmessage1",(req,res,next)=>{
            }
        })
 })  
-})       
+})  
+})     
 
 
 router.get("/download/:path",(req,res,next)=>{
