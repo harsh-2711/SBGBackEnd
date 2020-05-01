@@ -12,7 +12,7 @@ router.get('/all_users',(req,res,next)=>{
 });
 
 router.post("/data",(req,res,next)=>{
-    console.log(req.body);
+    // console.log(req.body);
     const user=req.body.user;
     db.query("select * from login where UserName=?",[user],(err,data1)=>{
         if(err)

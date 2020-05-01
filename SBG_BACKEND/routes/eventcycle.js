@@ -3,7 +3,14 @@ const express=require("express");
 const datetime=require("node-datetime");
 const dateformat=require('dateformat');
 const router=express()
-
+const nodemailer=require('nodemailer');
+const transport=nodemailer.createTransport({
+    service:"gmail",
+    auth:{
+        user:"sharma.aman1298@gmail.com",
+        pass:"aman$1234"
+    }
+    });
 
 router.post("/forward",(req,res,next)=>{
     const id=req.body.id;
@@ -37,8 +44,41 @@ router.post("/forward",(req,res,next)=>{
         })
     })
   
-})
+});
 
+sendEmailToVenueManagers = function(eventId){
+    db.query(`select e.*,v.VenueName,c.ClubName from event as e, venue as v, club as c
+             where EventId=? and v.VenueId=e.VenueId and c.ClubId=e.ClubId`,[eventId],(err,data)=>{
+        db.query(` SELECT * FROM venueman WHERE VenueId = (Select VenueId from event where EventId='`+eventId+"')",
+        (error,data3)=>{
+            if(error)
+                console.log(error);
+            else{
+                data3.forEach(manager=>{
+                    const mailText="Hello "+manager.Name+`,\n\n\nFollowing are the details of an approved event :`+
+                            `\n\nEvent Name : `+data[0].EventName+
+                            `\nOrganized by : `+data[0].ClubName+
+                            `\nEvent Starts at : `+data[0].StartDateTime+
+                            `\nEvent Ends at : `+data[0].EndDateTime+
+                            '\n\nPlease co-ordinate with the organizers.'+
+                            '\n\nDean Students,\nDA-IICT.'
+                    transport.sendMail({
+                        to:manager.Email,
+                        from:"sharma.aman1298@gmail.com",
+                        subject:"New Event at "+data[0].VenueName,
+                        text: mailText
+                    },(err,GmailResponse)=>{
+                        if(err)
+                            console.log("Error sending email "+err);
+                        else{
+                            console.log("Mail sent");
+                        }
+                    });
+                });
+            }
+        });
+    });
+}
 
 router.post("/approve",(req,res,next)=>{
     const id=req.body.id;
@@ -60,13 +100,14 @@ router.post("/approve",(req,res,next)=>{
                     UserName:user
                 } 
                 // inserting log entry 
-              db.query("insert into statuschangelog set ?",info,(err,data2)=>{
-             if(err)
-             res.status(400)
-             else
-             res.send("Request Approved");
-              })
-           
+                db.query("insert into statuschangelog set ?",info,(err,data2)=>{
+                    if(err)
+                        res.status(400)
+                    else{
+                        sendEmailToVenueManagers(id);
+                        res.send(data2);
+                    }
+                })
             }
         })
     })
@@ -244,6 +285,7 @@ router.get("/event_log/:id",(req,res,next)=>{
         SELECT l.Name,scl.* 
         from login as l, statuschangelog as scl 
         WHERE scl.UserName = l.UserName
+        and scl.EventId = ? 
         order by scl.DateTime
     `,[req.params.id],(err,data)=>{
         if(err)
