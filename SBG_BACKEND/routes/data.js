@@ -12,7 +12,7 @@ router.get('/all_users',(req,res,next)=>{
 });
 
 router.post("/data",(req,res,next)=>{
-   
+    // console.log(req.body);
     const user=req.body.user;
     db.query("select * from login where UserName=?",[user],(err,data1)=>{
         if(err)
@@ -35,14 +35,14 @@ router.post("/data",(req,res,next)=>{
 router.post("/sub_data",(req,res,next)=>{
     const user=req.body.user
     db.query("select * from subscriber where Username=?",[user],(err,data)=>{
-        
+
     })
 })
 
 router.post("/data1",(req,res,next)=>{
     console.log(req.body)
      const user=req.body.user;
-     db.query("select ClubId from club where Convener=? || DConvener=?",[user,user],(err,data=>{
+     db.query("select ClubId from club where Convener=? || DConvener=?",[user,user],((err,data)=>{
          if(err)
          res.status(400)
          else
@@ -63,6 +63,7 @@ router.post("/data2",(req,res,next)=>{
         res.status(400)
         else
         {
+            console.log(data3)
             const info={
                 event:data3[0].EventId
             }

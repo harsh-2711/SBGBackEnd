@@ -124,6 +124,31 @@ router.get("/get_events_for_dean",(req,res,next)=>{
     })
 })
 
+router.get("/get_events_for_club_convener/:userId",(req,res,next)=>{
+    db.query('select ClubId from club where Convener = ? or DConvener=?',[req.params.userId,req.params.userId],(err1,data1)=>{
+        if(data1.length!=0){
+            db.query(
+                `select e.EventId, e.EventName,v.VenueName,c.ClubName,e.StartDateTime,e.EndDateTime,s.StatusName 
+                from event e,club c,venue v,status s 
+                where e.VenueId=v.VenueId 
+                and e.ClubId = ?
+                and c.ClubId = ?
+                and e.StatusId=s.StatusId
+                and s.StatusName in ("EventRaised","ForwardedBySBG","RejectedBySBG","Approve","RejectedByDean","ReportPending","ReportSubmitted","Finished")        
+                `,[data1[0].ClubId,data1[0].ClubId],(err2,data2)=>{
+                    console.log(data2);
+                    if(err2)
+                        res.status(400)
+                    else{
+                        res.send(data2);
+                    }
+            })
+        }
+        else
+            res.send("No clubs found");
+    });    
+})
+
 router.get("/get_event",(req,res,next)=>{
     db.query("select e.EventId, e.EventName,v.VenueName,c.ClubName,e.StartDateTime,e.EndDateTime,s.StatusName from event e,club c,venue v,status s where e.VenueId=v.VenueId and e.ClubId=c.ClubId and e.StatusId=s.StatusId",(err,data)=>{
      if(err)
