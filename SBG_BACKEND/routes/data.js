@@ -12,7 +12,7 @@ router.get('/all_users',(req,res,next)=>{
 });
 
 router.post("/data",(req,res,next)=>{
-    console.log(req.body);
+   
     const user=req.body.user;
     db.query("select * from login where UserName=?",[user],(err,data1)=>{
         if(err)
@@ -20,7 +20,7 @@ router.post("/data",(req,res,next)=>{
         else
         {
             db.query("select RoleName from role where RoleId=?",[data1[0].RoleId],(err,data2)=>{
-            
+             console.log(data2[0].RoleName + "Aman");
               res.send({ 
                  user:data1[0].Name,
                  userEmail:user,
@@ -31,6 +31,13 @@ router.post("/data",(req,res,next)=>{
         }
     })
 });
+
+router.post("/sub_data",(req,res,next)=>{
+    const user=req.body.user
+    db.query("select * from subscriber where Username=?",[user],(err,data)=>{
+        
+    })
+})
 
 router.post("/data1",(req,res,next)=>{
     console.log(req.body)
