@@ -9,9 +9,11 @@ const clubRouter=require("./routes/club");
 const venueRouter=require("./routes/venue");
 const eventRouter=require("./routes/event");
 const chatRouter=require("./routes/chat");
+const subRouter=require("./routes/subscriber");
 const eventlifeCycle=require("./routes/eventcycle");
 const complaintRouter=require("./routes/complaints");
 const session=require("express-session")
+
 const filestorage=multer.diskStorage(
   {
       destination:(req,file,cb)=>{
@@ -40,6 +42,7 @@ app.use(eventRouter);
 app.use(eventlifeCycle);
 app.use(chatRouter);
 app.use(complaintRouter);
+app.use(subRouter);
 const PORT = 8081;
 app.listen(PORT, () => {
   console.log("Server is Running");
