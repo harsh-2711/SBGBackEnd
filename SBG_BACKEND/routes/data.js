@@ -40,7 +40,7 @@ router.post("/sub_data",(req,res,next)=>{
 })
 
 router.post("/data1",(req,res,next)=>{
-    console.log(req.body)
+  
      const user=req.body.user;
      db.query("select ClubId from club where Convener=? || DConvener=?",[user,user],((err,data)=>{
          if(err)
@@ -56,14 +56,14 @@ router.post("/data1",(req,res,next)=>{
 })
 
 router.post("/data2",(req,res,next)=>{
-    console.log(req.body);
+   
     const club=req.body.club
     db.query("select EventId from event where ClubId=?",[club],(err,data3)=>{
         if(err)
         res.status(400)
         else
         {
-            console.log(data3)
+           
             const info={
                 event:data3[0].EventId
             }
