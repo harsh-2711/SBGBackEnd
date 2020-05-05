@@ -125,8 +125,11 @@ router.get("/get_events_for_dean",(req,res,next)=>{
 })
 
 router.get("/get_events_for_club_convener/:userId",(req,res,next)=>{
-    db.query('select ClubId from club where Convener = ? or DConvener=?',[req.params.userId,req.params.userId],(err1,data1)=>{
+    console.log(req.params.userId);
+    db.query('select ClubId from club where ClubEmail=?',[req.params.userId],(err1,data1)=>{
+        console.log(data1 + "Hey aman");
         if(data1.length!=0){
+            
             db.query(
                 `select e.EventId, e.EventName,v.VenueName,c.ClubName,e.StartDateTime,e.EndDateTime,s.StatusName 
                 from event e,club c,venue v,status s 

@@ -108,11 +108,11 @@ router.post("/clubevent",(req,res,next)=>{
         and e.StatusId=s.StatusId
         and e.ClubId=?
         and s.StatusName = ?     
-        `,[id,"Finished"],(err,data)=>{
+        `,[id,"Approve"],(err,data)=>{
             if(err)
                 res.status(400)
             else{
-        
+                
                 res.send(data);
             }
     })

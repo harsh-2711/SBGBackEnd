@@ -60,6 +60,18 @@ router.post("/arequest",(req,res,next)=>{
         res.send("Done");
     })
 })
+
+router.post("/rrequest",(req,res,next)=>{
+    const id=req.body.itemid;
+    db.query("delete from lostfound where ItemId=?",[id],(err,data)=>{
+        if(err)
+        res.status(400)
+        else
+        res.send("Item Rejected");
+    })
+})
+
+
 router.get("/lost",(req,res,next)=>{
       
       db.query("select * from lostfound join login on lostfound.UserName=login.UserName where FinalStatus=0",(err,data)=>{
@@ -98,33 +110,40 @@ router.get("/lostfound/:id",(req,res,next)=>{
 })
 
 router.post("/notify",(req,res,next)=>{
+    console.log(req.body);
     const lost=req.body.lost;
     const found=req.body.found;
     const desp=req.body.desp;
-    db.query("select Name,Contact from login where UserName=?",[found],(err,data)=>{
+    const name=req.body.name;
+    const place=req.body.place;
+    db.query("select Name,Contact from login where UserName=?",[lost],(err,data)=>{
         if(err)
         res.status(400)
         else
         {
-            const foundername=data[0].Name;
-            const foundercontact=data[0].Contact;
-            db.query("select Name from login where UserName=?",[lost],(err,info1)=>{
+            const lostname=data[0].Name;
+            const lostcontact=data[0].Contact;
+            db.query("select Name from login where UserName=?",[found],(err,info1)=>{
 
-            const lostname=info1[0].Name
-            const message=" Hello"+ " "+ lostname + "," + "\n\n Lost Item with Following Description has been founded: \n \n"+
-                   desp + "\n\n Founder Details: \n \n"+
-                   "Name:"+ foundername + "\n"+
-                   "Email:"+ found + "\n"+ 
-                   "Contact:" + foundercontact + "\n \n" +
+            const foundername=info1[0].Name
+            const message=" Hello"+ " "+ foundername + "," + "\n\n Item with Following Description has been claimed by someone: \n \n"+
+                   "Item Name:" + name + "\n" +
+                   "Lost Place:" + place + "\n" +
+                    "Description" + "\n" +
+                     desp 
+                   + "\n\n Claimed Person Details: \n \n"+
+                   "Name:"+ lostname + "\n"+
+                   "Email:"+ lost + "\n"+ 
+                   "Contact:" + lostcontact + "\n \n" +
 
-                   "Contact the person and get your item back" + "\n \n"+
+                   "Contact the person and pass on the item" + "\n \n"+
                    "Thank you" + "\n" +
                    "SBG-DAIICT"
 
                    transport.sendMail({
-                    to:lost,
+                    to:found,
                     from:"sharma.aman1298@gmail.com",
-                    subject:"Lost Item Found",
+                    subject:"Found Item Claimed",
                     text:message
                    },(err,data2)=>{
                        if(err)

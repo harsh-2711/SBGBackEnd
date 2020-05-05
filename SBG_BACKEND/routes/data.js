@@ -42,7 +42,7 @@ router.post("/sub_data",(req,res,next)=>{
 router.post("/data1",(req,res,next)=>{
   
      const user=req.body.user;
-     db.query("select ClubId from club where Convener=? || DConvener=?",[user,user],((err,data)=>{
+     db.query("select ClubId from club where ClubEmail=?",[user],((err,data)=>{
          if(err)
          res.status(400)
          else
