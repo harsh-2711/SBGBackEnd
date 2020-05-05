@@ -91,6 +91,18 @@ router.get("/get_complaint/:id",(req,res,next)=>{
     })
 });
 
+router.get("/complaint_status/:id",(req,res,next)=>{
+    db.query("select s.* from status s, complaint c where c.Status=s.StatusId and c.ComplaintId=?",
+    [req.params.id],(err,data)=>{
+        if(err){
+            res.status(400);
+        }
+        else{
+            res.send(data);
+        }
+    }); 
+});
+
 router.get("/get_tagged_clubs/:id",(req,res,next)=>{
     db.query("select c1.ClubName from club as c1, complaint as c2, complainttags as c3 where c1.ClubId=c3.ClubId and c2.ComplaintId = c3.ComplaintId and c2.ComplaintId=?",
     [req.params.id],(err,data)=>{
@@ -102,6 +114,43 @@ router.get("/get_tagged_clubs/:id",(req,res,next)=>{
         }
     }); 
 });
+
+router.post('/change_to_in_process',(req,res,next)=>{
+    db.query("select StatusId from status where StatusName='ComplaintInProcess'",
+    (err,data)=>{
+        if(err)
+            res.status(400);
+        else{
+            db.query("update complaint set status=? where ComplaintId=?",
+            [data[0].StatusId,req.body.id],(err,data2)=>{
+                if(err)
+                    res.status(400);
+                else{
+                    res.send(data2);
+                }
+            });
+        }
+    });
+});
+
+router.post('/change_to_solved',(req,res,next)=>{
+    db.query("select StatusId from status where StatusName='ComplaintResolved'",
+    (err,data)=>{
+        if(err)
+            res.status(400);
+        else{
+            db.query("update complaint set status=? where ComplaintId=?",
+            [data[0].StatusId,req.body.id],(err,data2)=>{
+                if(err)
+                    res.status(400);
+                else{
+                    res.send(data2);
+                }
+            });
+        }
+    });
+});
+
 
 router.get("/complaints_by_username/:username",(req,res,next)=>{
     db.query(
@@ -128,8 +177,15 @@ router.post("/add_comment",(req,res,next)=>{
     db.query("insert into complaintcomments set ?",formData,(err,data)=>{
         if(err) 
             res.status(400);
-        else
+        else{
             res.send(data);
+            // db.query("Select * from complaintcomments where ComplaintId = ?",[req.body.ComplaintId],(err,data2)=>{
+            //     if(err)
+            //         res.status(400);
+            //     else    
+            //         res.send(data2);
+            // });
+        }
     });
 })
 

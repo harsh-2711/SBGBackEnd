@@ -25,22 +25,22 @@ router.post("/add_event",(req,res,next)=>{
                 res.status(400)
             else
             {
-                // const id=data2.insertId;
-                // const dt=new Date();
-                // const DateTime=dateFormat(dt);
-                // const info={
-                //     EventId:id,
-                //     AfterStatus:data1[0].StatusId,
-                //     DateTime:DateTime,
-                //     UserName:user
-                // } 
+                const id=data2.insertId;
+                const dt=new Date();
+                const DateTime=dateFormat(dt);
+                const info={
+                    EventId:id,
+                    AfterStatus:data1[0].StatusId,
+                    DateTime:DateTime,
+                    UserName:user
+                } 
                 // inserting log entry 
-                // db.query("insert into statuschangelog set ?",info,(err,data2)=>{
+                db.query("insert into statuschangelog set ?",info,(err,data2)=>{
                     if(err)
                         res.status(400)
                     else
                         res.send({insertedEventId: eventId}); 
-            //     })
+                })
             }
         })
           // sending event id

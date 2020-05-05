@@ -2,6 +2,14 @@ const db=require("../db");
 const express=require("express");
 const router=express()
 
+router.get('/get_clubid_by_email/:email',(req,res,next)=>{
+    db.query("Select ClubId from club where ClubEmail=?",[req.params.email],(err,data)=>{
+        if(err)
+            res.status(400);
+        else
+            res.send(data);
+    });
+});
 
 router.post("/add_club",(req,res,next)=>{
     const name=req.body.clubname;
@@ -38,7 +46,10 @@ router.get("/club",(req,res,next)=>{
                     if(err)
                         res.status(400)
                     else{
-                        data[index].ConvenerName = data1[0].Name;
+                        if(data1.length!=0)
+                            data[index].ConvenerName = data1[0].Name;
+                        else    
+                            data[index].ConvenerName = "";
                         if(count1==data.length && count2==data.length)
                             res.send(data);
                     }
