@@ -1,5 +1,14 @@
 const db=require("../db");
 const express=require("express");
+const genpassword=require("generate-password");
+const nodemailer=require('nodemailer');
+const transport=nodemailer.createTransport({
+    service:"gmail",
+    auth:{
+        user:"sharma.aman1298@gmail.com",
+        pass:"aman$1234"
+    }
+    });
 const router=express()
 
 router.get('/get_clubid_by_email/:email',(req,res,next)=>{
@@ -27,7 +36,37 @@ router.post("/add_club",(req,res,next)=>{
         res.status(400)
         else
         {
-            res.send("Club has been added");
+            const password=genpassword.generate({
+                length:7,
+                numbers:true
+            })
+            db.query("insert into login set UserName=?,PassWord=?,Name=?,RoleId=?,IsReset=?",[email,password,name,4,1],(err,data2)=>{
+                if(err)
+                res.status(400)
+                else
+                {
+                    transport.sendMail({
+                        to:"aman.sharma122111@gmail.com",
+                        from:"sharma.aman1298@gmail.com",
+                        subject:"Login Credentials",
+                        text:"Hello" + name + ",\n\n" +
+                            "Login Credentials for Club/Committee members are:" + "\n" +
+                             "Username:" +  email + "\n" +
+                             "Password:" + password + "\n \n" +
+                             "Regards" + "\n" +
+                             "SBG-DAIICT"
+                    },(err,data3)=>{
+                              if(err)
+                              res.status(400)
+                              else
+                              {
+                                res.send("Club has been added");
+                              }
+                    })
+                }
+            })
+            
+
         }
     })
 })

@@ -32,16 +32,18 @@ router.post("/register",(req,res,next)=>{
 
 router.post("/login",(req,res,next)=>{
     // console.log(req.body);
+    console.log(req.body)
      const username=req.body.username
      const password=req.body.password
     db.query("select * from login where UserName=? && PassWord=?",[username,password],(err,data)=>{     
-         
+      console.log(data);
     if((data!=null || data!=undefined) && data.length<1)
     {
         res.status(400);
     }
     else
     {
+        console.log(data);
         const name = data[0].Name;
         const isReset=data[0].IsReset;
         db.query("select RoleName from role where RoleId = ?",[data[0].RoleId],(err,data)=>{
