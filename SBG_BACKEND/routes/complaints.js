@@ -151,6 +151,91 @@ router.post('/change_to_solved',(req,res,next)=>{
     });
 });
 
+router.get('/vote_count/:id',(req,res,next)=>{
+    db.query("select sum(Vote) as voteCount from complaintvotes where ComplaintId=?",[req.params.id],
+    (err,data)=>{
+        if(err){
+            console.log("select from complaintvotes");
+            res.status(400);
+        }
+        else{
+            res.send(data);
+        }
+    });
+});
+
+router.get('/has_voted/:userName/:id',(req,res,next)=>{
+    db.query("Select * from complaintvotes where UserName = ? and ComplaintId=?",
+    [req.params.userName,req.params.id],
+    (err,data)=>{
+        if(err)
+            res.status(400);
+        else{
+            if(data.length!=0)
+                res.send(true);
+            else
+                res.send(false);
+        }
+    });
+});
+
+router.post("/downvote",(req,res,next)=>{
+    userName = req.body.userName;
+    complaintId = req.body.complaintId;
+    
+    db.query("select * from complaintvotes where UserName=? and ComplaintId=?",[userName,complaintId],
+    (err,data)=>{
+        if(err){
+            console.log(err)
+            res.status(400)
+        }
+        else{
+            if(data.length==0){      // not voted before -> insert query
+                db.query("insert into complaintvotes set ?",{UserName:userName,ComplaintId:complaintId,Vote:-1},(err1,data1)=>{
+                    if(err1){
+                        res.status(400);
+                        console.log("Cannot insert into complaintvotes");
+                    }
+                    else{
+                        res.send(data1);
+                    }
+                });
+            }
+            else{           // already voted 
+                res.send("Already voted");
+            }
+        }
+    });
+});
+
+router.post("/upvote",(req,res,next)=>{
+    userName = req.body.userName;
+    complaintId = req.body.complaintId;
+
+    db.query("select * from complaintvotes where UserName=? and ComplaintId=?",[userName,complaintId],
+    (err,data)=>{
+        if(err){
+            console.log(err)
+            res.status(400)
+        }
+        else{
+            if(data.length==0){      // not voted before -> insert query
+                db.query("insert into complaintvotes set ?",{UserName:userName,ComplaintId:complaintId,Vote:1},(err1,data1)=>{
+                    if(err1){
+                        res.status(400);
+                        console.log("Cannot insert into complaintvotes");
+                    }
+                    else{
+                        res.send(data1);
+                    }
+                });
+            }
+            else{           // already voted 
+                res.send("Already voted");
+            }
+        }
+    });
+});
 
 router.get("/complaints_by_username/:username",(req,res,next)=>{
     db.query(
