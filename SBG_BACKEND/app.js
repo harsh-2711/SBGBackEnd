@@ -13,6 +13,7 @@ const subRouter=require("./routes/subscriber");
 const lostfoundRouter=require("./routes/lostfound");
 const eventlifeCycle=require("./routes/eventcycle");
 const complaintRouter=require("./routes/complaints");
+const suggestionRouter=require("./routes/suggestions");
 const session=require("express-session")
 
 const filestorage=multer.diskStorage(
@@ -44,6 +45,7 @@ app.use(eventRouter);
 app.use(eventlifeCycle);
 app.use(chatRouter);
 app.use(complaintRouter);
+app.use(suggestionRouter);
 app.use(subRouter);
 app.use(lostfoundRouter);
 const PORT = 8081;
