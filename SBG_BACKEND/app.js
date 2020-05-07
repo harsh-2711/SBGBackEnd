@@ -13,6 +13,7 @@ const subRouter=require("./routes/subscriber");
 const lostfoundRouter=require("./routes/lostfound");
 const eventlifeCycle=require("./routes/eventcycle");
 const complaintRouter=require("./routes/complaints");
+const votingRouter=require("./routes/voting");
 const session=require("express-session")
 
 const filestorage=multer.diskStorage(
@@ -46,6 +47,7 @@ app.use(chatRouter);
 app.use(complaintRouter);
 app.use(subRouter);
 app.use(lostfoundRouter);
+app.use(votingRouter)
 const PORT = 8081;
 app.listen(PORT, () => {
   console.log("Server is Running");

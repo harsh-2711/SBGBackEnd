@@ -21,10 +21,12 @@ router.get('/get_clubid_by_email/:email',(req,res,next)=>{
 });
 
 router.post("/add_club",(req,res,next)=>{
+   
     const name=req.body.clubname;
     const email=req.body.clubemail;
     const convener=req.body.convener;
     const dconvener=req.body.dconvener;
+    const selectedstudent=req.body.ss;
     postdata={
         ClubName:name,
         ClubEmail:email,
@@ -36,11 +38,13 @@ router.post("/add_club",(req,res,next)=>{
         res.status(400)
         else
         {
+            const clubid=data1.insertId;
+           
             const password=genpassword.generate({
                 length:7,
                 numbers:true
             })
-            db.query("insert into login set UserName=?,PassWord=?,Name=?,RoleId=?,IsReset=?",[email,password,name,4,1],(err,data2)=>{
+            db.query("insert into login set UserName=?,PassWord=?,Name=?,RoleId=?,IsReset=?,IsVote=?",[email,password,name,4,1,0],(err,data2)=>{
                 if(err)
                 res.status(400)
                 else
@@ -60,17 +64,52 @@ router.post("/add_club",(req,res,next)=>{
                               res.status(400)
                               else
                               {
-                                res.send("Club has been added");
+                                for(let i=0;i<selectedstudent.length;i++)
+                                {
+                                    db.query("insert into clubstudent set ClubId=?,StudentId=?",[clubid,selectedstudent[i]],(err,data)=>{
+                                       
+                                    })
+                                }
+                                db.query("insert into clubstudent set ClubId=?,StudentId=?",[clubid,convener],(err,data1)=>{
+                                    if(err)
+                                    res.status(400)
+                                    else
+                                    {
+                                        db.query("insert into clubstudent set ClubId=?,StudentId=?",[clubid,dconvener],(err,data)=>{
+
+                                        })
+                                    }
+                                })
+                                  
+                                res.send("club added");
+                              
                               }
                     })
                 }
             })
+          
             
 
         }
     })
 })
 
+
+
+router.get("/club_member/:id",(req,res,next)=>{
+    console.log(req.params.id);
+    db.query("select StudentId from clubstudent where ClubId=?",[req.params.id],(err,data)=>{
+        if(err)
+        {
+            req.status(400)
+        }
+        else
+        {
+            console.log(data);
+            res.send(data);
+        }
+    })
+})
 router.get("/club",(req,res,next)=>{
     db.query("select * from club",(err,data)=>{
         if(err)
@@ -147,15 +186,53 @@ router.put("/edit_club",(req,res,next)=>{
     const email=req.body.clubemail;
     const convener=req.body.convener;
     const dconvener=req.body.dconvener;
+    const selectedstudent=req.body.ss;
 
 
     db.query("update club set ClubName=?,ClubEmail=?,Convener=?,DConvener=? where ClubId=?",[name,email,convener,dconvener,id],(err,data)=>{
 
         if(err)
-        res.send(400)
+        res.status(400)
         else
-        res.send("Club data Updated");
+        {
+          db.query("delete from clubstudent where ClubId=?",[id],(err,data2)=>{
+              if(err)
+              res.status(400)
+              else
+              {
+                  for(let i=0;i<selectedstudent.length;i++)
+                  {
+                      db.query("insert into clubstudent set ClubId=?,StudentId=?",[id,selectedstudent[i]],(err,data3)=>{
+                         
+                      })
+                  }
+                  db.query("insert into clubstudent set ClubId=?,StudentId=?",[id,convener],(err,data1)=>{
+                    if(err)
+                    res.status(400)
+                    else
+                    {
+                        db.query("insert into clubstudent set ClubId=?,StudentId=?",[id,dconvener],(err,data)=>{
+                            
+                        })
+                    }
+                })
+                  res.send("updated")
+              }
+          })
+      
+        }
+    })
+})
 
+router.post("/fetchclub",(req,res,next)=>{
+    db.query("select * from club",(err,data)=>{
+        if(err)
+        res.status(400)
+        else
+        {
+            console.log(data);
+        res.send(data);
+        }
     })
 })
 
