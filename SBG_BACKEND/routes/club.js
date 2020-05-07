@@ -212,7 +212,7 @@ router.put("/edit_club",(req,res,next)=>{
                     else
                     {
                         db.query("insert into clubstudent set ClubId=?,StudentId=?",[id,dconvener],(err,data)=>{
-                            
+
                         })
                     }
                 })
