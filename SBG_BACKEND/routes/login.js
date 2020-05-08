@@ -18,7 +18,8 @@ router.post("/register",(req,res,next)=>{
         Name:req.body.name,
         Contact:req.body.contact,
         RoleId:3,
-        IsReset:0
+        IsReset:0,
+        IsVote:0
     }
     db.query("insert into login set ?",postdata,
     (err,data)=>{ 

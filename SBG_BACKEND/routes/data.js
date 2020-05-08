@@ -25,7 +25,8 @@ router.post("/data",(req,res,next)=>{
                  user:data1[0].Name,
                  userEmail:user,
                  status:data1[0].IsReset,
-                 role:data2[0].RoleName
+                 role:data2[0].RoleName,
+                 vote:data1[0].IsVote
               })
               })
         }
