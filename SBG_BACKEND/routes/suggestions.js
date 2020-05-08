@@ -77,7 +77,7 @@ router.get("/suggestions",(req,res,next)=>{
 })
 
 router.get("/suggestion_status/:id",(req,res,next)=>{
-    db.query("select s1.* from suggestion s, status s1 where s.Status=s1.StatusId"
+    db.query("select s1.* from suggestion s, status s1 where s.Status=s1.StatusId and s.SuggestionId=?"
     ,[req.params.id],(err,data)=>{
         if(err){
             console.log(err);
