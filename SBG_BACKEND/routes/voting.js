@@ -22,17 +22,7 @@ router.post("/add_agenda",(req,res,next)=>{
          res.status(400)
          else
          {
-             if(selectedvoter[0]==0)
-             {
-                 db.query("update login set IsVote=?",[1],(err,data5)=>{
-                     if(err)
-                     res.status(400)
-                     else
-                     res.send("Inserted");
-                 })
-             }
-             else
-             {
+             const voteid=data.insertId;
               for(let i=0;i<selectedvoter.length;i++)
               {
                   db.query("select * from clubstudent where ClubId=?",[selectedvoter[i]],(err,data1)=>{
@@ -42,7 +32,7 @@ router.post("/add_agenda",(req,res,next)=>{
                       {
                           for(let j=0;j<data1.length;j++)
                           {
-                              db.query("update login set IsVote=? where UserName=?",[1,data1[j].StudentId],(err,data2)=>{
+                              db.query("insert into voteperson set VoteId=?,StudentId=?,IsVote=?",[voteid,data1[j].StudentId,1],(err,data2)=>{
 
                               })
                           }
@@ -51,12 +41,82 @@ router.post("/add_agenda",(req,res,next)=>{
               }
               res.send("inserted");
             }
-         }
+         
      })
 })
 
+router.post("/add_agenda2",(req,res,next)=>{
+    console.log(req.body)
+    const agenda=req.body.agenda;
+    const selectedvoter=req.body.allow;
+     const info={
+         Agenda:agenda,
+         Yes:0,
+         No:0,
+         Result:"Not Declared",
+         Status:0
+
+     }
+  
+     db.query("insert into voting set ?",[info],(err,data)=>{
+         if(err)
+         res.status(400)
+         else
+         {
+             const voteid=data.insertId;
+              for(let i=0;i<selectedvoter.length;i++)
+              {
+                  
+                 db.query("insert into voteperson set VoteId=?,StudentId=?,IsVote=?",[voteid,selectedvoter[i],1],(err,data2)=>{
+
+                    })
+              }
+              res.send("Inserted");
+        }
+   })
+
+})
+              
+            
+
+
+router.post("/add_agenda1",(req,res,next)=>{
+    const agenda=req.body.agenda;
+    const info={
+        Agenda:agenda,
+        Yes:0,
+        No:0,
+        Result:"Not Declared",
+        Status:0
+
+    }
+    db.query("insert into voting set ?",[info],(err,data)=>{
+        if(err)
+        res.status(400)
+        else
+        {
+            const voteid=data.insertId;
+            db.query("select UserName from login where RoleId=?",[3],(err,data1)=>{
+                if(err)
+                res.status(400)
+                else
+                {
+                      for(let i=0;i<data1.length;i++)
+                      {
+                          db.query("insert into voteperson set VoteId=?,StudentId=?,IsVote=?",[voteid,data1[i].UserName,1],(err,data2)=>{
+                              
+                          })
+                      }
+                      res.send("inserted");
+                }
+            })
+        }
+    })
+    
+
+})
 router.post("/getcurrvote",(req,res,next)=>{
-    db.query("select * from voting where Status=? || Status=? ",[0,1],(err,data)=>{
+    db.query("select * from voting  where voting.Status=? || voting.Status=? ORDER BY VoteId ASC ",[0,1],(err,data)=>{
         if(err)
         res.status(400)
         else
@@ -130,7 +190,7 @@ router.post("/stopvoting",(req,res,next)=>{
         res.status(400)
         else
         {
-            db.query("update login set IsVote=?",[0],(err,data5)=>{
+            db.query("delete from voteperson where VoteId=?",[id],(err,data5)=>{
                 
             
             db.query("select * from voting where Status=? || Status=? ",[0,1],(err,data1)=>{
@@ -171,12 +231,12 @@ router.post("/acceptagenda",(req,res,next)=>{
            if(err)
            res.status(400)
            else{
-               db.query("update login set IsVote=? where UserName=?",[2,user],(err,data3)=>{
+               db.query("update voteperson set IsVote=? where StudentId=? && VoteId=?",[2,user,voteid],(err,data3)=>{
                        if(err)
                        res.status(400)
                         else
                         {
-                            db.query("select IsVote from login where UserName=?",[user],(err,data4)=>{
+                            db.query("select IsVote from voteperson where StudentId=? && VoteId=?",[user,voteid],(err,data4)=>{
                                 res.send({
                                     vote:data4[0].IsVote
                                 }
@@ -199,12 +259,12 @@ router.post("/rejectagenda",(req,res,next)=>{
            if(err)
            res.status(400)
            else{
-               db.query("update login set IsVote=? where UserName=?",[2,user],(err,data3)=>{
+               db.query("update voteperson set IsVote=? where StudentId=? && VoteId=?",[2,user,voteid],(err,data3)=>{
                        if(err)
                        res.status(400)
                         else
                         {
-                            db.query("select IsVote from login where UserName=?",[user],(err,data4)=>{
+                            db.query("select IsVote from voteperson where StudentId=? && VoteId=?",[user,voteid],(err,data4)=>{
                                 res.send({
                                     vote:data4[0].IsVote
                                 }
@@ -214,6 +274,31 @@ router.post("/rejectagenda",(req,res,next)=>{
                })
            }
        })
+    })
+})
+
+router.post("/checkvote",(req,res,next)=>{
+    console.log(req.body);
+    const voteid=req.body.voteid
+    const user=req.body.user
+    db.query("select * from voteperson where VoteId=? && StudentId=?",[voteid,user],(err,data)=>{
+        if(err)
+        res.status(400)
+        else
+        {
+            if(data.length==0)
+            {
+                res.send({
+                    status:0
+                })
+            }
+            else
+            {
+            res.send({
+                status:data[0].IsVote
+            })
+        }
+        }
     })
 })
 

@@ -3,11 +3,15 @@ const express=require('express');
 const router=express()
 
 router.get('/all_users',(req,res,next)=>{
+    
     db.query("select UserName,Name from login",(err,data)=>{
         if(err)
             res.status(400);
         else
+        {
+            
             res.send(data);
+        }
     });
 });
 
