@@ -15,6 +15,7 @@ const eventlifeCycle=require("./routes/eventcycle");
 const complaintRouter=require("./routes/complaints");
 const votingRouter=require("./routes/voting");
 const suggestionRouter=require("./routes/suggestions");
+const achievementsRouter=require("./routes/achievements");
 const session=require("express-session")
 
 const filestorage=multer.diskStorage(
@@ -50,6 +51,7 @@ app.use(suggestionRouter);
 app.use(subRouter);
 app.use(lostfoundRouter);
 app.use(votingRouter)
+app.use(achievementsRouter)
 const PORT = 8081;
 app.listen(PORT, () => {
   console.log("Server is Running");
