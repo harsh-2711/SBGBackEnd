@@ -1,0 +1,37 @@
+[
+    {
+        "position":"Dean Students",  
+        "name": "Ranendu Ghosh",  
+        "email": "dean@daiict.ac.in",
+        "photo":"dean.jpg",
+        "phone":"9859658996"
+    }, 
+    { 
+        "position":"Convener",
+        "name": "Smith", 
+        "email": "Convener@daiict.ac.in",
+        "photo":"dean.jpg",
+        "phone":"9859658996"
+    }, 
+    { 
+        "position":"Deputy Convener",
+        "name": "Abhishek", 
+        "email": "DyConvener@daiict.ac.in",
+        "photo":"dean.jpg",
+        "phone":"9859658996"
+    },
+    {
+        "position":"Secretary",
+        "name": "Srikumar", 
+        "email": "Secretary@daiict.ac.in",
+        "photo":"dean.jpg",
+        "phone":"9859658996"
+    },
+    {
+        "position":"Treasurer",
+        "name": "Smith", 
+        "email": "Treasurer@daiict.ac.in",
+        "photo":"dean.jpg",
+        "phone":"9859658996"
+    }
+]
