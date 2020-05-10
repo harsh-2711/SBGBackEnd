@@ -2,6 +2,11 @@ const db=require('../db')
 const express=require('express');
 const router=express()
 
+router.get("/about_us",(req,res,next)=>{
+    const jsonFile = require('../about-us.json');
+    res.json(jsonFile);
+})
+
 router.get('/all_users',(req,res,next)=>{
     
     db.query("select UserName,Name from login",(err,data)=>{
