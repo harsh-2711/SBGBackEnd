@@ -82,4 +82,23 @@ router.post("/data2",(req,res,next)=>{
     })
 })
 
+
+router.post("/getreportevent",(req,res,next)=>{
+    const club=req.body.club
+    db.query("select ClubId from club where ClubEmail=?",[club],(err,data)=>{
+     if(err)
+     res.status(400)
+     else
+     {
+         db.query("select EventId from event where ClubId=? and StatusId=?",[data[0].ClubId,5],(err,data1)=>{
+             if(err)
+             res.status(400)
+             else
+             {
+                 res.send(data1);
+             }
+         })
+     }
+    })
+})
 module.exports=router;

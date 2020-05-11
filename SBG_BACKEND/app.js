@@ -15,6 +15,7 @@ const eventlifeCycle=require("./routes/eventcycle");
 const complaintRouter=require("./routes/complaints");
 const votingRouter=require("./routes/voting");
 const budgetRouter=require("./routes/budget")
+const reportRouter=require("./routes/report")
 const suggestionRouter=require("./routes/suggestions");
 const achievementsRouter=require("./routes/achievements");
 const session=require("express-session")
@@ -54,6 +55,7 @@ app.use(lostfoundRouter);
 app.use(votingRouter)
 app.use(budgetRouter)
 app.use(achievementsRouter)
+app.use(reportRouter);
 const PORT = 8081;
 app.listen(PORT, () => {
   console.log("Server is Running");

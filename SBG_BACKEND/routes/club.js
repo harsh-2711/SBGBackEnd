@@ -230,7 +230,7 @@ router.post("/fetchclub",(req,res,next)=>{
         res.status(400)
         else
         {
-            console.log(data);
+          
         res.send(data);
         }
     })
