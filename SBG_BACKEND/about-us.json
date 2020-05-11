@@ -1,37 +1,42 @@
 [
     {
         "position":"Dean Students",  
-        "name": "Ranendu Ghosh",  
-        "email": "dean@daiict.ac.in",
+        "name": "Prof. Ranendu Ghosh",  
+        "email": "dean_students@daiict.ac.in",
         "photo":"dean.jpg",
+        "location":"# 4109, Faculty Block-4",
         "phone":"9859658996"
     }, 
     { 
         "position":"Convener",
-        "name": "Smith", 
-        "email": "Convener@daiict.ac.in",
-        "photo":"dean.jpg",
+        "name": "Convener Name", 
+        "email": "convener_student_government@daiict.ac.in",
+        "photo":"avatar.jpg",
+        "location":"No Location Available",
         "phone":"9859658996"
     }, 
     { 
         "position":"Deputy Convener",
-        "name": "Abhishek", 
-        "email": "DyConvener@daiict.ac.in",
-        "photo":"dean.jpg",
+        "name": "Dy. Convener Name", 
+        "email": "dy_convener_student_government@daiict.ac.in",
+        "photo":"avatar.jpg",
+        "location":"No Location Available",
         "phone":"9859658996"
     },
     {
         "position":"Secretary",
-        "name": "Srikumar", 
-        "email": "Secretary@daiict.ac.in",
-        "photo":"dean.jpg",
+        "name": "Scretary Name", 
+        "email": "secretary_student_government@daiict.ac.in",
+        "photo":"avatar.jpg",
+        "location":"No Location Available",
         "phone":"9859658996"
     },
     {
         "position":"Treasurer",
-        "name": "Smith", 
-        "email": "Treasurer@daiict.ac.in",
-        "photo":"dean.jpg",
+        "name": "Treasurer Name", 
+        "email": "treasurer_student_government@daiict.ac.in",
+        "photo":"avatar.jpg",
+        "location":"No Location Available",
         "phone":"9859658996"
     }
 ]
