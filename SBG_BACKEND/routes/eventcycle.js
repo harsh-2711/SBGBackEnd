@@ -63,7 +63,7 @@ sendEmailToVenueManagers = function(eventId){
                             '\n\nPlease co-ordinate with the organizers.'+
                             '\n\nDean Students,\nDA-IICT.'
                     transport.sendMail({
-                        to:manager.Email,
+                        to:"aman.sharma122111@gmail.com",
                         from:"sharma.aman1298@gmail.com",
                         subject:"New Event at "+data[0].VenueName,
                         text: mailText

@@ -31,7 +31,9 @@ router.post("/add_club",(req,res,next)=>{
         ClubName:name,
         ClubEmail:email,
         Convener:convener,
-        DConvener:dconvener
+        DConvener:dconvener,
+        Budget:0,
+        Budget1:0
     }
     db.query("insert into club set ?",postdata,(err,data1)=>{
         if(err)
@@ -44,21 +46,22 @@ router.post("/add_club",(req,res,next)=>{
                 length:7,
                 numbers:true
             })
-            db.query("insert into login set UserName=?,PassWord=?,Name=?,RoleId=?,IsReset=?,IsVote=?",[email,password,name,4,1,0],(err,data2)=>{
+            db.query("insert into login set UserName=?,PassWord=?,Name=?,RoleId=?,IsReset=?",[email,password,name,4,1],(err,data2)=>{
                 if(err)
                 res.status(400)
                 else
                 {
+                    const message="Hello" + name + ",\n\n" +
+                    "Login Credentials for Club/Committee members are:" + "\n" +
+                     "Username:" +  email + "\n" +
+                     "Password:" + password + "\n \n" +
+                     "Regards" + "\n" +
+                     "SBG-DAIICT"
                     transport.sendMail({
-                        to:"aman.sharma122111@gmail.com",
+                        to:"201912120@daiict.ac.in",
                         from:"sharma.aman1298@gmail.com",
                         subject:"Login Credentials",
-                        text:"Hello" + name + ",\n\n" +
-                            "Login Credentials for Club/Committee members are:" + "\n" +
-                             "Username:" +  email + "\n" +
-                             "Password:" + password + "\n \n" +
-                             "Regards" + "\n" +
-                             "SBG-DAIICT"
+                        text:message
                     },(err,data3)=>{
                               if(err)
                               res.status(400)
