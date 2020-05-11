@@ -40,7 +40,7 @@ router.post("/distributefund",(req,res,next)=>{
         {
             let fund=data[0].Budget
             fund=parseInt(fund)+parseInt(amt);
-            db.query("update club set Budget=?,Budget1=?,where ClubId=?",[fund,fund,club],(err,data1)=>{
+            db.query("update club set Budget=?,Budget1=? where ClubId=?",[fund,fund,club],(err,data1)=>{
                 if(err)
                 res.status(400)
                 else
