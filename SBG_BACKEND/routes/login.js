@@ -11,20 +11,34 @@ const transport=nodemailer.createTransport({
     });
 const router=express();
 
+function isNumeric(num){
+    return !isNaN(num)
+}
+
 router.post("/register",(req,res,next)=>{
+    let roleId;
+    let email = req.body.username;
+    email = email.replace('@daiict.ac.in','');
+    if(isNumeric(email)){    // user is students
+        roleId=3;
+    }
+    else{
+        roleId=10;
+    }
     const postdata={
         UserName:req.body.username,
         PassWord:req.body.password,
         Name:req.body.name,
         Contact:req.body.contact,
-        RoleId:3,
-        IsReset:0,
-        IsVote:0
+        RoleId:roleId,
+        IsReset:0
     }
     db.query("insert into login set ?",postdata,
     (err,data)=>{ 
-        if(err)
+        if(err){
             res.status(400);
+            console.log(err);
+        }
         else    
             res.send("Registered Successfully");
     });
