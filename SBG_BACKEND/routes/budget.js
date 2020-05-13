@@ -119,13 +119,15 @@ router.post("/addExpenses",(req,res,next)=>{
     const club=req.body.club;
     const amt=req.body.amt;
     const desp=req.body.desp; 
+    const qty=req.body.qty;
+    const price=req.body.price
      db.query("select * from club where ClubEmail=?",[club],(err,data)=>{
          if(err)
          res.status(400)
          else
          {
 
-            db.query("insert into expenses set ClubId=?,Amount=?,Description=?",[data[0].ClubId,parseInt(amt),desp],(err,data2)=>{
+            db.query("insert into expenses set ClubId=?,Amount=?,Description=?,Qty=?,Price=?,Status=?",[data[0].ClubId,parseInt(amt),desp,qty,price,0],(err,data2)=>{
                 if(err)
                 res.status(400)
                 else
@@ -150,7 +152,7 @@ router.post("/addExpenses",(req,res,next)=>{
 
 router.post("/getExpenses",(req,res,next)=>{
     const id=req.body.id
-    db.query("select * from expenses where ClubId=?",[id],(err,data)=>{
+    db.query("select * from expenses where ClubId=? and Status=?",[id,1],(err,data)=>{
         if(err)
         res.status(400)
         else
@@ -159,5 +161,48 @@ router.post("/getExpenses",(req,res,next)=>{
             res.send(data);
         }
     })
+})
+
+router.post("/getExpenses1",(req,res,next)=>{
+    console.log(req.body)
+    const id=req.body.id
+    db.query("select * from expenses where ClubId=? and Status=?",[id,0],(err,data)=>{
+        if(err)
+        res.status(400)
+        else
+        {
+            console.log(data);
+            res.send(data);
+        }
+    })
+})
+
+
+router.post("/approveexpense",(req,res,next)=>{
+    const id=req.body.id;
+    db.query("update expenses set Status=? where ClubId=? && Status=?",[1,id,0],(err,data2)=>{
+        if(err)
+        res.status(400)
+        else
+        {
+             res.send("updated");
+        }
+    })
+})
+router.post("/rejectexpense",(req,res,next)=>{
+    const id=req.body.id;
+    db.query("update expenses set Status=? where ClubId=? && Status=?",[2,id,0],(err,data2)=>{
+        if(err)
+        res.status(400)
+        else
+        {
+             res.send("updated");
+        }
+    })
+})
+
+router.post("/attendreport",(req,res,next)=>{
+      
+    res.send(req.files[0].filename);
 })
 module.exports=router

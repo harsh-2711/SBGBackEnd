@@ -35,7 +35,7 @@ router.post('/report1',(req,res,next)=>{
                 EventId:req.body.ReportData.EventId.value,
                 ReportDate:req.body.ReportData.ReportDate,
                 Attendance:req.body.ReportData.Attendance,
-                Prize:req.body.ReportData.Prize,
+                Description:req.body.ReportData.Description,
                 Images:req.body.ReportData.Images
             }
             db.query("insert into report set ?",info,
@@ -363,5 +363,11 @@ router.post("/sbgseccmessage",(req,res,next)=>{
                        })
                 })  
                 })  
-                })                  
+                }) 
+                
+                
+                router.post("/attendreport",(req,res,next)=>{
+      
+                    res.send(req.files[0].filename);
+                })
 module.exports=router

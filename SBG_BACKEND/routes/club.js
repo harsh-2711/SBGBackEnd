@@ -54,11 +54,11 @@ router.post("/add_club",(req,res,next)=>{
                     const message="Hello" + name + ",\n\n" +
                     "Login Credentials for Club/Committee members are:" + "\n" +
                      "Username:" +  email + "\n" +
-                     "Password:" + password + "\n \n" +
+                     "Password:" + password + "\n\n" +
                      "Regards" + "\n" +
                      "SBG-DAIICT"
                     transport.sendMail({
-                        to:"201912120@daiict.ac.in",
+                        to:"aman.sharma122111@gmail.com",
                         from:"sharma.aman1298@gmail.com",
                         subject:"Login Credentials",
                         text:message

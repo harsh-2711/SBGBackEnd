@@ -10,7 +10,7 @@ router.post("/add_event",(req,res,next)=>{
     db.query("select * from status where StatusName=?",["EventRaised"],(err,data1)=>{
 
         let eventId=uuid(); // creating even id manually
-        
+         console.log(req.body.storeposter)
         const data={
             EventId:eventId,
             EventName:req.body.eventName,
@@ -22,7 +22,8 @@ router.post("/add_event",(req,res,next)=>{
             Agenda:req.body.agenda,
             Poster:req.body.storeposter,
             Link:req.body.link,
-            Type:req.body.type
+            Type:req.body.type,
+            Youtube:req.body.youtube
         }
         db.query("insert into event set ?",data,(err,data2)=>{
             if(err)
@@ -62,11 +63,12 @@ router.put("/update_event",(req,res,next)=>{
     const updatedate=dateFormat(StartDateTime);
     const updatedate1=dateFormat(EndDateTime);
     const Agenda=req.body.agenda
-    const Poster=req.body.storeposter1
+    const Poster=req.body.storeposter
     const Link=req.body.link
      const type=req.body.type
-
-    db.query("update event set EventName=?,ClubId=?,VenueId=?,StartDateTime=?,EndDateTime=?,Agenda=?,Poster=?,Link=?,Type=? where EventId=?",[EventName,ClubId,VenueId,updatedate,updatedate1,Agenda,Poster,Link,type,eventid],(err,data1)=>{
+     const youtube=req.body.youtube
+     console.log(Poster + "Varsha1")
+    db.query("update event set EventName=?,ClubId=?,VenueId=?,StartDateTime=?,EndDateTime=?,Agenda=?,Poster=?,Link=?,Type=?,Youtube=? where EventId=?",[EventName,ClubId,VenueId,updatedate,updatedate1,Agenda,Poster,Link,type,youtube,eventid],(err,data1)=>{
         if(err)
             res.status(400)
         else
@@ -87,6 +89,8 @@ router.put("/update_event1",(req,res,next)=>{
     const Poster=req.body.storeposter1
     const Link=req.body.link
      const type=req.body.type
+
+     console.log(Poster + "Varsha")
     db.query("update event set EventName=?,ClubId=?,VenueId=?,StartDateTime=?,EndDateTime=?,Agenda=?,Poster=?,Link=?,Type=?  where EventId=?",[EventName,ClubId,VenueId,updatedate,updatedate1,Agenda,Poster,Link,type,eventid],(err,data1)=>{
         if(err)
             res.status(400)
@@ -199,7 +203,7 @@ router.get("/get_events_for_club_convener/:userId",(req,res,next)=>{
 })
 
 router.get("/get_event",(req,res,next)=>{
-    db.query("select e.EventId, e.EventName,v.VenueName,c.ClubName,e.StartDateTime,e.EndDateTime,s.StatusName,e.Type,e.Link,e.Poster from event e,club c,venue v,status s where e.VenueId=v.VenueId and e.ClubId=c.ClubId and e.StatusId=s.StatusId",(err,data)=>{
+    db.query("select e.EventId, e.EventName,v.VenueName,c.ClubName,e.StartDateTime,e.EndDateTime,s.StatusName,e.Type,e.Link,e.Poster,e.Youtube from event e,club c,venue v,status s where e.VenueId=v.VenueId and e.ClubId=c.ClubId and e.StatusId=s.StatusId",(err,data)=>{
      if(err)
      res.status(400)
      else
@@ -217,6 +221,7 @@ router.get("/get_event_guests/:id",(req,res,next)=>{
             if(err)
                 res.status(400)
             else{
+                
                 res.send(data);
             }
     })
@@ -236,7 +241,7 @@ router.get("/get_event_sponsers/:id",(req,res,next)=>{
 
 router.get("/get_event/:id",(req,res,next)=>{
     db.query(
-        `select e.EventId, e.EventName,v.VenueName,c.ClubName,e.StartDateTime,e.EndDateTime,s.StatusName,e.Type,e.Link,e.Poster,e.Agenda
+        `select e.EventId, e.EventName,v.VenueName,c.ClubName,e.StartDateTime,e.EndDateTime,s.StatusName,e.Type,e.Link,e.Poster,e.Agenda,e.Youtube
         from event e,club c,venue v,status s 
         where e.EventId=?
         and e.VenueId=v.VenueId 
@@ -251,6 +256,7 @@ router.get("/get_event/:id",(req,res,next)=>{
                         info:data,
                         attach:data2
                     }
+                    
                     res.send(data3);
                 })
                
