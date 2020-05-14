@@ -27,7 +27,7 @@ router.post("/add_agenda",(req,res,next)=>{
     })
      const info={
          Agenda:agenda,
-         Result:"Not Declared",
+         Result:null,
          Status:0,
          Code:password
 
@@ -125,7 +125,7 @@ router.post("/add_agenda2",(req,res,next)=>{
     })
      const info={
          Agenda:agenda,
-         Result:"Not Declared",
+         Result:null,
          Status:0,
          Code:password
 
@@ -215,7 +215,7 @@ router.post("/add_agenda1",(req,res,next)=>{
     })
     const info={
         Agenda:agenda,
-        Result:"Not Declared",
+        Result:null,
         Status:0,
         Code:password
 
