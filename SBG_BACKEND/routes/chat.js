@@ -3,8 +3,10 @@ const express = require("express");
 const router = express();
 const datatime = require("dateformat");
 
+// const push = require('../models/push-notifications');
+// to send notification call push.sendNotification(<UserName>,<Title>,<Body>,<EventId>)
 
-
+// push.sendNotification("deanSASgfadfg","You have a new message","Convener rep","eventId")
 
 router.post("/deanattach", (req, res, next) => {
     console.log(req.files);

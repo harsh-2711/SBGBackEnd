@@ -12,6 +12,9 @@ const transport = nodemailer.createTransport({
     }
 });
 
+const push = require('../models/push-notifications');
+// to send notification call push.sendNotification(<UserName>,<Title>,<Body>,<EventId>)
+
 router.post("/forward", (req, res, next) => {
     const id = req.body.id;
     const status = req.body.status;
@@ -88,6 +91,21 @@ router.post("/approve", (req, res, next) => {
             if (err)
                 res.status(400)
             else {
+
+                db.query("select c.ClubId,c.ClubName,e.EventName from event e, club c where e.EventId = ? and c.ClubId=e.ClubId",id,(err2,data2)=>{
+                    if(data2.length!=0){
+                        db.query("select * from subscriber where ClubId = ?",data2[0].ClubId,
+                        (err3,data3)=>{
+                            if(data3.length!=0){
+                                data3.forEach(clubSubscriber=>{
+                                    push.init();
+                                    push.sendNotification(clubSubscriber, data2[0].ClubName, "New Event : "+data2[0].EventName+" scheduled",id);
+                                })
+                            }
+                        })                        
+                    }
+                });
+
                 const dt = new Date();
                 const DateTime = dateformat(dt);
                 const info = {
