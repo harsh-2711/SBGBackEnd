@@ -32,16 +32,21 @@ router.post("/data", (req, res, next) => {
         if (err)
             res.status(400)
         else {
-            db.query("select RoleName from role where RoleId=?", [data1[0].RoleId], (err, data2) => {
-                console.log(data2[0].RoleName + "Aman");
-                res.send({
-                    user: data1[0].Name,
-                    userEmail: user,
-                    status: data1[0].IsReset,
-                    role: data2[0].RoleName,
-                    vote: data1[0].IsVote
+            if(data1.length!=0){      
+                db.query("select RoleName from role where RoleId=?", [data1[0].RoleId], (err, data2) => {
+                    console.log(data2[0].RoleName + "Aman");
+                    res.send({
+                        user: data1[0].Name,
+                        userEmail: user,
+                        status: data1[0].IsReset,
+                        role: data2[0].RoleName,
+                        vote: data1[0].IsVote
+                    })
                 })
-            })
+            }
+            else{
+                res.send(333);
+            }
         }
     })
 });
