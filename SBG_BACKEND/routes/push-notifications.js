@@ -48,4 +48,37 @@ app.post('/unsubscribe-for-push-notification', (req,res,next)=>{
 })
 
 
+app.post("/getnotification",(req,res,next)=>{
+    const user=req.body.user
+    db.query("select * from notifications where UserName=?",[user],(err,data)=>{
+        if(err)
+        res.status(400)
+        else
+        {
+            res.send(data)
+        }
+
+    })
+})
+
+app.post("/deletenotify",(req,res,next)=>{
+    const id=req.body.id
+    const user=req.body.user
+    db.query("delete from notifications where NotificationId=?",[id],(err,data)=>{
+        if(err)
+        res.status(400)
+        else
+        {
+            db.query("select * from notifications where UserName=?",[user],(err,data2)=>{
+                if(err)
+                res.status(400)
+                else
+                {
+                    res.send(data2)
+                }
+            })
+        }
+    })
+})
+
 module.exports = app
