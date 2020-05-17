@@ -45,7 +45,8 @@ router.post("/register", (req, res, next) => {
 });
 
 
-router.post("/login", (req,res,next) => {
+
+router.post("/login", (req, res, next) => {
     // console.log(req.body);
     console.log(req.body)
     const username = req.body.username
@@ -65,8 +66,7 @@ router.post("/login", (req,res,next) => {
                     console.log("Error in login.js");
                 }
                 else {
-                  
-
+                    req.session.username = username;
                     res.send({
                         userRole: data[0].RoleName,
                         name: name,
