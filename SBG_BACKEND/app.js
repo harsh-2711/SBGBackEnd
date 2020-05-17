@@ -18,6 +18,7 @@ const budgetRouter=require("./routes/budget")
 const reportRouter=require("./routes/report")
 const suggestionRouter=require("./routes/suggestions");
 const achievementsRouter=require("./routes/achievements");
+const notificationRouter=require("./routes/push");
 const session=require("express-session")
 
 const filestorage=multer.diskStorage(
@@ -30,11 +31,17 @@ const filestorage=multer.diskStorage(
       }
   }
 )
-
+var MemoryStore =session.MemoryStore;
+app.use(session({
+    secret: "1234567890QWERTY",
+    resave: true,
+    store: new MemoryStore(),
+    saveUninitialized: true
+}));
 app.use(multer({storage:filestorage}).any("upload"))
 var cors = require('cors')
 app.use(cors())
-app.use(session({secret:"aman",resave:false,saveUninitialized:false}));
+
 app.use(BodyParser.json())
 app.use("/public",express.static(path.join(__dirname, 'public')));
 app.use(
@@ -56,6 +63,7 @@ app.use(votingRouter)
 app.use(budgetRouter)
 app.use(achievementsRouter)
 app.use(reportRouter);
+app.use(notificationRouter)
 const PORT = 8081;
 app.listen(PORT, () => {
   console.log("Server is Running");

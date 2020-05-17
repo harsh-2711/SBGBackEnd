@@ -20,9 +20,15 @@ router.get('/all_users',(req,res,next)=>{
     });
 });
 
+
+// router.get("/user",(req,res,next)=>{
+//     console.log(req.session.username + "inuser")
+//     res.send(req.session.username)
+// })
 router.post("/data",(req,res,next)=>{
     // console.log(req.body);
     const user=req.body.user;
+    console.log(req.session.username + "from data")
     db.query("select * from login where UserName=?",[user],(err,data1)=>{
         if(err)
         res.status(400)

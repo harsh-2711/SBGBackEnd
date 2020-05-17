@@ -201,8 +201,5 @@ router.post("/rejectexpense",(req,res,next)=>{
     })
 })
 
-router.post("/attendreport",(req,res,next)=>{
-      
-    res.send(req.files[0].filename);
-})
+
 module.exports=router
