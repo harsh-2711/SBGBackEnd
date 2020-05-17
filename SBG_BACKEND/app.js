@@ -19,6 +19,7 @@ const reportRouter=require("./routes/report")
 const suggestionRouter=require("./routes/suggestions");
 const achievementsRouter=require("./routes/achievements");
 const notificationRouter=require("./routes/push");
+const pushRouter=require("./routes/push-notifications")
 const session=require("express-session")
 
 const filestorage=multer.diskStorage(
@@ -64,6 +65,7 @@ app.use(budgetRouter)
 app.use(achievementsRouter)
 app.use(reportRouter);
 app.use(notificationRouter)
+app.use(pushRouter)
 const PORT = 8081;
 app.listen(PORT, () => {
   console.log("Server is Running");

@@ -237,7 +237,6 @@ router.delete("/delete_club/:id", (req, res, next) => {
 })
 
 
-<<<<<<< HEAD
 router.post("/getcore",(req,res,next)=>{
     const id=req.body.id;
     db.query("select clubstudent.*,club.Convener,club.DConvener,login.* from clubstudent join  login on login.UserName=clubstudent.StudentId join club on club.ClubId=clubStudent.ClubId  where clubstudent.ClubId=?",[id],(err,data)=>{
@@ -253,6 +252,3 @@ router.post("/getcore",(req,res,next)=>{
 
 
 module.exports=router
-=======
-module.exports = router
->>>>>>> 33587c42299b13f202eb586cbe8b4489ecb474ec

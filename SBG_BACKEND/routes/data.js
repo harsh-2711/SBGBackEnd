@@ -19,32 +19,12 @@ router.get('/all_users', (req, res, next) => {
     });
 });
 
-<<<<<<< HEAD
 
 // router.get("/user",(req,res,next)=>{
 //     console.log(req.session.username + "inuser")
 //     res.send(req.session.username)
 // })
-router.post("/data",(req,res,next)=>{
-    // console.log(req.body);
-    const user=req.body.user;
-    console.log(req.session.username + "from data")
-    db.query("select * from login where UserName=?",[user],(err,data1)=>{
-        if(err)
-        res.status(400)
-        else
-        {
-            db.query("select RoleName from role where RoleId=?",[data1[0].RoleId],(err,data2)=>{
-             console.log(data2[0].RoleName + "Aman");
-              res.send({ 
-                 user:data1[0].Name,
-                 userEmail:user,
-                 status:data1[0].IsReset,
-                 role:data2[0].RoleName,
-                 vote:data1[0].IsVote
-              })
-              })
-=======
+
 router.post("/data", (req, res, next) => {
     // console.log(req.body);
     const user = req.body.user;
@@ -62,7 +42,6 @@ router.post("/data", (req, res, next) => {
                     vote: data1[0].IsVote
                 })
             })
->>>>>>> 33587c42299b13f202eb586cbe8b4489ecb474ec
         }
     })
 });
