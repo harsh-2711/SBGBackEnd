@@ -93,15 +93,15 @@ router.post("/approve", (req, res, next) => {
                 res.status(400)
             else {
 
-                db.query("select c.ClubId,c.ClubName,e.EventName from event e, club c where e.EventId = ? and c.ClubId=e.ClubId",id,(err2,data2)=>{
+                db.query("select c.ClubId,c.ClubName,e.EventName from event e, club c where e.EventId = ? and c.ClubId=e.ClubId",[id],(err2,data2)=>{
                     if(data2.length!=0){
-                        db.query("select * from subscriber where ClubId = ?",data2[0].ClubId,
+                        db.query("select * from subscriber where ClubId = ?",[data2[0].ClubId],
                         (err3,data3)=>{
+                            
                             if(data3.length!=0){
                                 data3.forEach(clubSubscriber=>{
-                                    push.init();
-                                    push.sendNotification(clubSubscriber, data2[0].ClubName, "New Event : "+data2[0].EventName+" scheduled",id);
-                                    fcmPush.sendNotification(clubSubscriber, data2[0].ClubName, "New Event : "+data2[0].EventName+" scheduled",id);
+                                    push.sendNotification(clubSubscriber.UserName, data2[0].ClubName, "New Event : "+data2[0].EventName+" scheduled",id);
+                                    fcmPush.sendNotification(clubSubscriber.UserName, data2[0].ClubName, "New Event : "+data2[0].EventName+" scheduled",id);
                                 })
                             }
                         })                        

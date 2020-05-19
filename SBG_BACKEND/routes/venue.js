@@ -76,7 +76,10 @@ router.get("/venue", (req, res, next) => {
         if (err)
             res.status(400)
         else
+        { 
+            
             res.send(data);
+        }
     })
 })
 
