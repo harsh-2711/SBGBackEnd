@@ -14,6 +14,7 @@ const transport = nodemailer.createTransport({
 
 const push = require('../models/push-notifications');
 // to send notification call push.sendNotification(<UserName>,<Title>,<Body>,<EventId>)
+const fcmPush = require('../models/fcm-push')
 
 router.post("/forward", (req, res, next) => {
     const id = req.body.id;
@@ -100,6 +101,7 @@ router.post("/approve", (req, res, next) => {
                                 data3.forEach(clubSubscriber=>{
                                     push.init();
                                     push.sendNotification(clubSubscriber, data2[0].ClubName, "New Event : "+data2[0].EventName+" scheduled",id);
+                                    fcmPush.sendNotification(clubSubscriber, data2[0].ClubName, "New Event : "+data2[0].EventName+" scheduled",id);
                                 })
                             }
                         })                        

@@ -21,6 +21,15 @@ const achievementsRouter=require("./routes/achievements");
 const notificationRouter=require("./routes/push");
 const pushRouter=require("./routes/push-notifications")
 const session=require("express-session")
+// var router = express.Router()
+
+// a middleware function with no mount path. This code is executed for every request to the router
+app.use(function (req, res, next) {
+  res.addListener("finish",()=>{
+      console.log(req.originalUrl +' -> '+ res.statusCode + ' -> ' +  res.statusMessage)
+  })
+  next()
+})
 
 const filestorage=multer.diskStorage(
   {
@@ -66,6 +75,9 @@ app.use(achievementsRouter)
 app.use(reportRouter);
 app.use(notificationRouter)
 app.use(pushRouter)
+
+
+
 const PORT = 8081;
 app.listen(PORT, () => {
   console.log("Server is Running");

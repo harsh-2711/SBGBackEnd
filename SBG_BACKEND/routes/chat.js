@@ -4,6 +4,7 @@ const router = express();
 const datatime = require("dateformat");
 
  const push = require('../models/push-notifications');
+ const fcmPush = require('../models/fcm-push')
 // to send notification call push.sendNotification(<UserName>,<Title>,<Body>,<EventId>)
 
 // push.sendNotification("deanSASgfadfg","You have a new message","Convener rep","eventId")
@@ -57,6 +58,8 @@ router.post("/deanmessage", (req, res, next) => {
                     })
                 }
             })
+            fcmPush.sendNotification('convener_sbg@daiict.ac.in','New Message','You have a new message from Dean Students',req.body.event);
+            fcmPush.sendNotification('dy_convener_sbg@daiict.ac.in','New Message','You have a new message from Dean Students',req.body.event);
             push.sendNotification('convener_sbg@daiict.ac.in','New Message','You have a new message from Dean Students',req.body.event);
             push.sendNotification('dy_convener_sbg@daiict.ac.in','New Message','You have a new message from Dean Students',req.body.event);
         })
@@ -101,9 +104,10 @@ router.post("/deanmessage1", (req, res, next) => {
                     })
                 }
             })
+            fcmPush.sendNotification('convener_sbg@daiict.ac.in','New Message','You have a new message from Dean Students',req.body.event);
+            fcmPush.sendNotification('dy_convener_sbg@daiict.ac.in','New Message','You have a new message from Dean Students',req.body.event);
             push.sendNotification('convener_sbg@daiict.ac.in','New Message','You have a new message from Dean Students',req.body.event);
             push.sendNotification('dy_convener_sbg@daiict.ac.in','New Message','You have a new message from Dean Students',req.body.event);
-
         })
     })
 })
@@ -155,9 +159,10 @@ router.post("/clubmessage", (req, res, next) => {
                         })
 
                     })
+                    fcmPush.sendNotification('convener_sbg@daiict.ac.in','New Message','You have a new message from' + name ,req.body.event);
+                    fcmPush.sendNotification('dy_convener_sbg@daiict.ac.in','New Message','You have a new message from'+ name,req.body.event);
                     push.sendNotification('convener_sbg@daiict.ac.in','New Message','You have a new message from' + name ,req.body.event);
                     push.sendNotification('dy_convener_sbg@daiict.ac.in','New Message','You have a new message from'+ name,req.body.event);
-        
                 }
             })
         })
@@ -214,6 +219,7 @@ router.post("/sbgmessage", (req, res, next) => {
                     })
                 }
             })
+            fcmPush.sendNotification('dean@daiict.ac.in','New Message ','You have a new message from SBG',req.body.event);
             push.sendNotification('dean@daiict.ac.in','New Message ','You have a new message from SBG',req.body.event);
            
         })
@@ -268,6 +274,7 @@ router.post("/sbgcmessage", (req, res, next) => {
 
                     })
                 }
+                fcmPush.sendNotification(name,'New Message','You have a new message from SBG',req.body.event);
                 push.sendNotification(name,'New Message','You have a new message from SBG',req.body.event);
                
             })
@@ -314,6 +321,7 @@ router.post("/sbgmessage1", (req, res, next) => {
                     })
                 }
             })
+            fcmPush.sendNotification('dean@daiict.ac.in','New Message','You have a new message from SBG',req.body.event);
             push.sendNotification('dean@daiict.ac.in','New Message','You have a new message from SBG',req.body.event);
             
         })
@@ -359,6 +367,7 @@ router.post("/sbgcmessage1", (req, res, next) => {
 
                     })
                 }
+                fcmPush.sendNotification(name,'New Message','You have a new message from SBG',req.body.event);
                 push.sendNotification(name,'New Message','You have a new message from SBG',req.body.event);
                 
             })
@@ -403,9 +412,10 @@ router.post("/clubmessage1", (req, res, next) => {
 
                     })
                 }
+                fcmPush.sendNotification('convener_sbg@daiict.ac.in','New Message' + name,'You have a new message from'+ "" + name,req.body.event);
+                fcmPush.sendNotification('dy_convener_sbg@daiict.ac.in','New Message'+ name,'You have a new message from Dean Students' + "" + name,req.body.event);
                 push.sendNotification('convener_sbg@daiict.ac.in','New Message' + name,'You have a new message from'+ "" + name,req.body.event);
                 push.sendNotification('dy_convener_sbg@daiict.ac.in','New Message'+ name,'You have a new message from Dean Students' + "" + name,req.body.event);
-    
             })
         })
     })
@@ -435,6 +445,7 @@ router.post("/sbgattach", (req, res, next) => {
 
 
 router.get("/requestmessage",(req,res,next)=>{
+    fcmPush.sendNotification('convener_sbg@daiict.ac.in','New Message','You have a new message from Dean Students',req.body.event);
     push.sendNotification('convener_sbg@daiict.ac.in','New Message','You have a new message from Dean Students',req.body.event);
     
 })

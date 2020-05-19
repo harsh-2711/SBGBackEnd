@@ -1,11 +1,11 @@
-
-var db=require('../db'); 
+const db=require('../db'); 
 const webPush = require('web-push')
-var push={
+
+const push={            // for normal web-push-notifications VAPID key based
     init:function () {
        
-        const publicVapidKey="BGxwNY7oZ0WQPxRwEKiehWdLw1pYOXBI3Mju2HQmx4SHbUG1s0pJ6ThZG42a2Tpge6YYBlIAuOTQmliV8uWsASo"
-         const privateVapidKey="UDgYP-_1xwZXHvKmirtxAb32muoDATaLbAgwYA0uEk0"
+        const publicVapidKey="BN_K5rJpA-m8xRBSCrpAL3n1dQDb3swAENJX3Dpv9UwBgjW8YFeh4NNXCQnMBhmXkwDQRnd5U7pGLegqM9l5bz8"
+         const privateVapidKey="9VGeb9DG9qDFSIO0UNuFpLXfvwZ_xbmmqeeboV2XYZM"
       
         webPush.setVapidDetails('mailto:sharma.aman1298@gmail.com',publicVapidKey, privateVapidKey)
 

@@ -2,8 +2,8 @@ const db=require("../db")
 const express=require("express")
 const webpush=require("web-push")
 const router=express()
-const publickey="BGxwNY7oZ0WQPxRwEKiehWdLw1pYOXBI3Mju2HQmx4SHbUG1s0pJ6ThZG42a2Tpge6YYBlIAuOTQmliV8uWsASo"
-const privatekey="UDgYP-_1xwZXHvKmirtxAb32muoDATaLbAgwYA0uEk0"
+const publickey="BN_K5rJpA-m8xRBSCrpAL3n1dQDb3swAENJX3Dpv9UwBgjW8YFeh4NNXCQnMBhmXkwDQRnd5U7pGLegqM9l5bz8"
+const privatekey="9VGeb9DG9qDFSIO0UNuFpLXfvwZ_xbmmqeeboV2XYZM"
 webpush.setVapidDetails('mailto:sharma.aman1298@gmail.com',publickey,privatekey)
 
 
