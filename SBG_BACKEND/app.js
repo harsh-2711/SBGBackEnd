@@ -21,6 +21,7 @@ const achievementsRouter=require("./routes/achievements");
 const notificationRouter=require("./routes/push");
 const pushRouter=require("./routes/push-notifications")
 const session=require("express-session")
+const certificates = require("./routes/certificates")
 // var router = express.Router()
 
 // a middleware function with no mount path. This code is executed for every request to the router
@@ -75,6 +76,7 @@ app.use(achievementsRouter)
 app.use(reportRouter);
 app.use(notificationRouter)
 app.use(pushRouter)
+app.use(certificates)
 
 
 
