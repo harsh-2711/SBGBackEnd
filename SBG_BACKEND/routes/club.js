@@ -241,11 +241,11 @@ router.delete("/delete_club/:id", verifyToken, (req, res, next) => {
 
 router.post("/getcore", verifyToken, (req, res, next) => {
     const id = req.body.id;
-    db.query("select clubstudent.*,club.Convener,club.DConvener,login.* from clubstudent join  login on login.UserName=clubstudent.StudentId join club on club.ClubId=clubStudent.ClubId  where clubstudent.ClubId=?", [id], (err, data) => {
-        if (err)
+    db.query("select clubstudent.*,club.Convener,club.DConvener,login.* from clubstudent join  login on login.UserName=clubstudent.StudentId join club on club.ClubId=clubstudent.ClubId  where clubstudent.ClubId=?", [id], (err, data) => {
+        if (err) {
             res.status(400)
-        else {
-
+            console.log(err);
+        } else {
             res.send(data);
         }
     })

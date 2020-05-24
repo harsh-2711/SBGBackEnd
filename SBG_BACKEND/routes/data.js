@@ -20,6 +20,17 @@ router.get('/all_users', (req, res, next) => {
     });
 });
 
+router.get('/all_students', (req, res, next) => {
+
+    db.query("select UserName,Name from login where RoleId=3", (err, data) => {
+        if (err)
+            res.status(400);
+        else {
+
+            res.send(data);
+        }
+    });
+});
 
 // router.get("/user",(req,res,next)=>{
 //     console.log(req.session.username + "inuser")
