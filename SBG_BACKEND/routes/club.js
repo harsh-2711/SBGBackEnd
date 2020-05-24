@@ -2,6 +2,7 @@ const db = require("../db");
 const express = require("express");
 const genpassword = require("generate-password");
 const nodemailer = require('nodemailer');
+const verifyToken = require('../utils/VerifyToken');
 const transport = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -11,7 +12,7 @@ const transport = nodemailer.createTransport({
 });
 const router = express()
 
-router.get('/get_clubid_by_email/:email', (req, res, next) => {
+router.get('/get_clubid_by_email/:email', verifyToken, (req, res, next) => {
     db.query("Select ClubId from club where ClubEmail=?", [req.params.email], (err, data) => {
         if (err)
             res.status(400);
@@ -20,7 +21,7 @@ router.get('/get_clubid_by_email/:email', (req, res, next) => {
     });
 });
 
-router.post("/add_club", (req, res, next) => {
+router.post("/add_club", verifyToken, (req, res, next) => {
 
     const name = req.body.clubname;
     const email = req.body.clubemail;
@@ -94,24 +95,25 @@ router.post("/add_club", (req, res, next) => {
 
 
 
-router.get("/club_member/:id", (req, res, next) => {
+router.get("/club_member/:id", verifyToken, (req, res, next) => {
     console.log(req.params.id);
     db.query("select StudentId from clubstudent where ClubId=?", [req.params.id], (err, data) => {
         if (err) {
             req.status(400)
-        }
-        else {
+        } else {
             console.log(data);
             res.send(data);
         }
     })
 })
-router.get("/club", (req, res, next) => {
+
+router.get("/club", verifyToken, (req, res, next) => {
     db.query("select * from club", (err, data) => {
         if (err)
             res.status(400)
         else {
-            let count1 = 0, count2 = 0;
+            let count1 = 0,
+                count2 = 0;
             for (let index in data) {
                 // console.log(index);
                 db.query("select Name from login where UserName=?", [data[index].Convener],
@@ -147,7 +149,7 @@ router.get("/club", (req, res, next) => {
 })
 
 
-router.get("/club/:id", (req, res, next) => {
+router.get("/club/:id", verifyToken, (req, res, next) => {
     db.query("select * from club where ClubId=?", [req.params.id], (err, data) => {
         if (err)
             res.status(400);
@@ -176,7 +178,7 @@ router.get("/club/:id", (req, res, next) => {
 })
 
 
-router.put("/edit_club", (req, res, next) => {
+router.put("/edit_club", verifyToken, (req, res, next) => {
     const id = req.body.id;
     const name = req.body.clubname;
     const email = req.body.clubemail;
@@ -216,7 +218,7 @@ router.put("/edit_club", (req, res, next) => {
     })
 })
 
-router.post("/fetchclub", (req, res, next) => {
+router.post("/fetchclub", verifyToken, (req, res, next) => {
     db.query("select * from club", (err, data) => {
         if (err)
             res.status(400)
@@ -227,7 +229,7 @@ router.post("/fetchclub", (req, res, next) => {
     })
 })
 
-router.delete("/delete_club/:id", (req, res, next) => {
+router.delete("/delete_club/:id", verifyToken, (req, res, next) => {
     db.query("delete from club where ClubId=?", [req.params.id], (err, data) => {
         if (err)
             res.status(400)
@@ -237,18 +239,17 @@ router.delete("/delete_club/:id", (req, res, next) => {
 })
 
 
-router.post("/getcore",(req,res,next)=>{
-    const id=req.body.id;
-    db.query("select clubstudent.*,club.Convener,club.DConvener,login.* from clubstudent join  login on login.UserName=clubstudent.StudentId join club on club.ClubId=clubStudent.ClubId  where clubstudent.ClubId=?",[id],(err,data)=>{
-        if(err)
-        res.status(400)
-        else
-        {
-            
+router.post("/getcore", verifyToken, (req, res, next) => {
+    const id = req.body.id;
+    db.query("select clubstudent.*,club.Convener,club.DConvener,login.* from clubstudent join  login on login.UserName=clubstudent.StudentId join club on club.ClubId=clubStudent.ClubId  where clubstudent.ClubId=?", [id], (err, data) => {
+        if (err)
+            res.status(400)
+        else {
+
             res.send(data);
         }
     })
 })
 
 
-module.exports=router
+module.exports = router

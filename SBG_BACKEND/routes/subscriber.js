@@ -1,21 +1,16 @@
-
 const db = require('../db')
 const express = require('express');
 const router = express()
+const verifyToken = require('../utils/VerifyToken');
 
-
-
-
-
-router.post("/subdata", (req, res, next) => {
+router.post("/subdata", verifyToken, (req, res, next) => {
     console.log(req.body);
     const user = req.body.user
     db.query("select ClubId from subscriber where UserName=?", [user], (err, data) => {
         if (data) {
             console.log(data);
             res.send(data);
-        }
-        else {
+        } else {
             res.status(400);
         }
 
@@ -23,19 +18,18 @@ router.post("/subdata", (req, res, next) => {
 })
 
 
-router.post("/intdata", (req, res, next) => {
+router.post("/intdata", verifyToken, (req, res, next) => {
     const user = req.body.user;
     db.query("select EventId from interested where UserName=?", [user], (err, data) => {
         if (data) {
             res.send(data);
-        }
-        else {
+        } else {
             res.status(400);
         }
     })
 })
 
-router.post("/subscribe", (req, res, next) => {
+router.post("/subscribe", verifyToken, (req, res, next) => {
 
     const user = req.body.user;
     const id = req.body.clubid
@@ -49,7 +43,7 @@ router.post("/subscribe", (req, res, next) => {
     })
 })
 
-router.post("/unsubscribe", (req, res, next) => {
+router.post("/unsubscribe", verifyToken, (req, res, next) => {
 
     const user = req.body.user;
     const id = req.body.clubid
@@ -63,7 +57,7 @@ router.post("/unsubscribe", (req, res, next) => {
 })
 
 
-router.post("/interested", (req, res, next) => {
+router.post("/interested", verifyToken, (req, res, next) => {
     console.log(req.body);
     const user = req.body.user;
     const id = req.body.eventid;
@@ -76,7 +70,7 @@ router.post("/interested", (req, res, next) => {
     })
 })
 
-router.post("/uninterested", (req, res, next) => {
+router.post("/uninterested", verifyToken, (req, res, next) => {
     const user = req.body.user;
     const id = req.body.eventid;
     db.query("delete from interested where EventId=? && UserName=?", [id, user], (err, data) => {
@@ -89,7 +83,7 @@ router.post("/uninterested", (req, res, next) => {
 })
 
 
-router.post("/clubevent", (req, res, next) => {
+router.post("/clubevent", verifyToken, (req, res, next) => {
 
     const id = req.body.id;
     db.query(
@@ -101,13 +95,13 @@ router.post("/clubevent", (req, res, next) => {
         and e.ClubId=?
         and s.StatusName = ?     
         `, [id, "Approve"], (err, data) => {
-        if (err)
-            res.status(400)
-        else {
+            if (err)
+                res.status(400)
+            else {
 
-            res.send(data);
-        }
-    })
+                res.send(data);
+            }
+        })
 });
 
 module.exports = router;

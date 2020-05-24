@@ -4,6 +4,7 @@ const router = express();
 const fs = require('fs');
 const datetime = require('dateformat');
 const nodemailer = require('nodemailer');
+const verifyToken = require('../utils/VerifyToken');
 const transport = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -12,11 +13,11 @@ const transport = nodemailer.createTransport({
     }
 });
 
-router.post("/imgupload", (req, res, next) => {
+router.post("/imgupload", verifyToken, (req, res, next) => {
     res.send(req.files[0].filename);
 })
 
-router.post("/submitrequest", (req, res, next) => {
+router.post("/submitrequest", verifyToken, (req, res, next) => {
     console.log(req.body);
     const data = {
         UserName: req.body.user,
@@ -37,7 +38,7 @@ router.post("/submitrequest", (req, res, next) => {
     })
 })
 
-router.get("/lfrequest", (req, res, next) => {
+router.get("/lfrequest", verifyToken, (req, res, next) => {
     console.log("Hey Aman");
     db.query("select * from lostfound join login on lostfound.UserName=login.UserName where lostfound.FinalStatus IS NULL", (err, data1) => {
         if (err)
@@ -49,7 +50,7 @@ router.get("/lfrequest", (req, res, next) => {
     })
 })
 
-router.post("/arequest", (req, res, next) => {
+router.post("/arequest", verifyToken, (req, res, next) => {
     const id = req.body.itemid;
     const status = req.body.status;
     db.query("update lostfound set FinalStatus=? where ItemId=?", [status, id], (err, data) => {
@@ -60,7 +61,7 @@ router.post("/arequest", (req, res, next) => {
     })
 })
 
-router.post("/rrequest", (req, res, next) => {
+router.post("/rrequest", verifyToken, (req, res, next) => {
     const id = req.body.itemid;
     db.query("delete from lostfound where ItemId=?", [id], (err, data) => {
         if (err)
@@ -71,7 +72,7 @@ router.post("/rrequest", (req, res, next) => {
 })
 
 
-router.get("/lost", (req, res, next) => {
+router.get("/lost", verifyToken, (req, res, next) => {
 
     db.query("select * from lostfound join login on lostfound.UserName=login.UserName where FinalStatus=0", (err, data) => {
         if (err)
@@ -83,7 +84,7 @@ router.get("/lost", (req, res, next) => {
     })
 })
 
-router.get("/found", (req, res, next) => {
+router.get("/found", verifyToken, (req, res, next) => {
     db.query("select * from lostfound join login on lostfound.UserName=login.UserName where FinalStatus=1", (err, data) => {
         if (err)
             res.status(400)
@@ -92,7 +93,7 @@ router.get("/found", (req, res, next) => {
     })
 })
 
-router.get("/lostfound/:id", (req, res, next) => {
+router.get("/lostfound/:id", verifyToken, (req, res, next) => {
 
     db.query("select * from lostfound join login on lostfound.UserName=login.UserName where lostfound.ItemId=?", [req.params.id], (err, data) => {
         if (err)
@@ -106,7 +107,7 @@ router.get("/lostfound/:id", (req, res, next) => {
     })
 })
 
-router.post("/notify", (req, res, next) => {
+router.post("/notify", verifyToken, (req, res, next) => {
     console.log(req.body);
     const lost = req.body.lost;
     const found = req.body.found;
@@ -126,8 +127,8 @@ router.post("/notify", (req, res, next) => {
                     "Item Name:" + name + "\n" +
                     "Lost Place:" + place + "\n" +
                     "Description" + "\n" +
-                    desp
-                    + "\n\n Claimed Person Details: \n \n" +
+                    desp +
+                    "\n\n Claimed Person Details: \n \n" +
                     "Name:" + lostname + "\n" +
                     "Email:" + lost + "\n" +
                     "Contact:" + lostcontact + "\n \n" +
@@ -154,14 +155,14 @@ router.post("/notify", (req, res, next) => {
     })
 })
 
-router.get("/fetchimage/:id", (req, res, next) => {
+router.get("/fetchimage/:id", verifyToken, (req, res, next) => {
     console.log("Hey");
     db.query("select Image from lostfound where ItemId=?", [req.params.id], (err, data) => {
         if (err)
             res.status(400)
         else {
 
-            var img = fs.readFile('/public/uploads/' + data[0].Image, { root: '../SBG_BACKEND' }, function (err, data1) {
+            var img = fs.readFile('/public/uploads/' + data[0].Image, { root: '../SBG_BACKEND' }, function(err, data1) {
                 var contentType = 'image/png';
                 var base64 = Buffer.from(data1).toString('base64');
                 base64 = 'data:image/png;base64,' + base64;

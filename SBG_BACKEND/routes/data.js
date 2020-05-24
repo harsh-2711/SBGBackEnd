@@ -1,8 +1,9 @@
 const db = require('../db')
 const express = require('express');
 const router = express()
+const verifyToken = require('../utils/VerifyToken');
 
-router.get("/about_us", (req, res, next) => {
+router.get("/about_us", verifyToken, (req, res, next) => {
     const jsonFile = require('../about-us.json');
     res.json(jsonFile);
 })
@@ -25,14 +26,14 @@ router.get('/all_users', (req, res, next) => {
 //     res.send(req.session.username)
 // })
 
-router.post("/data", (req, res, next) => {
+router.post("/data", verifyToken, (req, res, next) => {
     // console.log(req.body);
     const user = req.body.user;
     db.query("select * from login where UserName=?", [user], (err, data1) => {
         if (err)
             res.status(400)
         else {
-            if(data1.length!=0){      
+            if (data1.length != 0) {
                 db.query("select RoleName from role where RoleId=?", [data1[0].RoleId], (err, data2) => {
                     console.log(data2[0].RoleName + "Aman");
                     res.send({
@@ -43,22 +44,21 @@ router.post("/data", (req, res, next) => {
                         vote: data1[0].IsVote
                     })
                 })
-            }
-            else{
+            } else {
                 res.send(333);
             }
         }
     })
 });
 
-router.post("/sub_data", (req, res, next) => {
+router.post("/sub_data", verifyToken, (req, res, next) => {
     const user = req.body.user
     db.query("select * from subscriber where Username=?", [user], (err, data) => {
 
     })
 })
 
-router.post("/data1", (req, res, next) => {
+router.post("/data1", verifyToken, (req, res, next) => {
 
     const user = req.body.user;
     db.query("select ClubId from club where ClubEmail=?", [user], ((err, data) => {
@@ -73,7 +73,7 @@ router.post("/data1", (req, res, next) => {
     }))
 })
 
-router.post("/data2", (req, res, next) => {
+router.post("/data2", verifyToken, (req, res, next) => {
 
     const club = req.body.club
     db.query("select EventId from event where ClubId=?", [club], (err, data3) => {
@@ -90,7 +90,7 @@ router.post("/data2", (req, res, next) => {
 })
 
 
-router.post("/getreportevent", (req, res, next) => {
+router.post("/getreportevent", verifyToken, (req, res, next) => {
     const club = req.body.club
     db.query("select ClubId from club where ClubEmail=?", [club], (err, data) => {
         if (err)

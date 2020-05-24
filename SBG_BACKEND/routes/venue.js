@@ -1,9 +1,9 @@
 const db = require("../db");
 const express = require("express");
 const router = express()
+const verifyToken = require('../utils/VerifyToken');
 
-
-router.post("/add_venue", (req, res, next) => {
+router.post("/add_venue", verifyToken, (req, res, next) => {
     const name = req.body.name
     const cap = req.body.cap;
     let hasac = req.body.hasac;
@@ -31,7 +31,7 @@ router.post("/add_venue", (req, res, next) => {
 
 
 
-router.post("/add_venueman", (req, res, next) => {
+router.post("/add_venueman", verifyToken, (req, res, next) => {
 
     const data = {
         VenueId: req.body.VenueId,
@@ -47,7 +47,7 @@ router.post("/add_venueman", (req, res, next) => {
 })
 
 
-router.post("/get_venueman", (req, res, next) => {
+router.post("/get_venueman", verifyToken, (req, res, next) => {
     const id = req.body.id;
     db.query("select * from venueman where VenueId=?", [id], (err, data) => {
         if (err)
@@ -59,7 +59,7 @@ router.post("/get_venueman", (req, res, next) => {
     })
 })
 
-router.post("/delete_venueman", (req, res, next) => {
+router.post("/delete_venueman", verifyToken, (req, res, next) => {
     const VenueId = req.body.VenueId
 
     db.query("delete from venueman where VenueId=?", [VenueId], (err, data) => {
@@ -70,21 +70,20 @@ router.post("/delete_venueman", (req, res, next) => {
     })
 })
 
-router.get("/venue", (req, res, next) => {
+router.get("/venue", verifyToken, (req, res, next) => {
 
     db.query("select * from venue", (err, data) => {
         if (err)
             res.status(400)
-        else
-        { 
-            
+        else {
+
             res.send(data);
         }
     })
 })
 
 
-router.get("/venue/:id", (req, res, next) => {
+router.get("/venue/:id", verifyToken, (req, res, next) => {
 
     db.query("select * from venue where VenueId=?", [req.params.id], (err, data) => {
         if (err)
@@ -97,7 +96,7 @@ router.get("/venue/:id", (req, res, next) => {
 })
 
 
-router.put("/edit_venue", (req, res, next) => {
+router.put("/edit_venue", verifyToken, (req, res, next) => {
 
     const id = req.body.id;
     const name = req.body.name;
@@ -119,7 +118,7 @@ router.put("/edit_venue", (req, res, next) => {
     })
 })
 
-router.delete("/delete_venue/:id", (req, res, next) => {
+router.delete("/delete_venue/:id", verifyToken, (req, res, next) => {
     db.query("delete from venue where VenueId=?", [req.params.id], (err, data) => {
         if (err)
             res.status(400)

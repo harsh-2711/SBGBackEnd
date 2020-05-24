@@ -4,6 +4,7 @@ const datetime = require("node-datetime");
 const dateformat = require('dateformat');
 const router = express()
 const nodemailer = require('nodemailer');
+const verifyToken = require('../utils/VerifyToken');
 const transport = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -16,7 +17,7 @@ const push = require('../models/push-notifications');
 // to send notification call push.sendNotification(<UserName>,<Title>,<Body>,<EventId>)
 const fcmPush = require('../models/fcm-push')
 
-router.post("/forward", (req, res, next) => {
+router.post("/forward", verifyToken, (req, res, next) => {
     const id = req.body.id;
     const status = req.body.status;
     const user = req.body.user;
@@ -30,13 +31,13 @@ router.post("/forward", (req, res, next) => {
                 const dt = new Date();
                 const DateTime = dateformat(dt);
                 const info = {
-                    EventId: id,
-                    BeforeStatus: status,
-                    AfterStatus: data[0].StatusId,
-                    DateTime: DateTime,
-                    UserName: user
-                }
-                // inserting log entry 
+                        EventId: id,
+                        BeforeStatus: status,
+                        AfterStatus: data[0].StatusId,
+                        DateTime: DateTime,
+                        UserName: user
+                    }
+                    // inserting log entry 
                 db.query("insert into statuschangelog set ?", info, (err, data2) => {
                     if (err)
                         res.status(400)
@@ -49,7 +50,7 @@ router.post("/forward", (req, res, next) => {
 
 });
 
-sendEmailToVenueManagers = function (eventId) {
+sendEmailToVenueManagers = function(eventId) {
     db.query(`select e.*,v.VenueName,c.ClubName from event as e, venue as v, club as c
              where EventId=? and v.VenueId=e.VenueId and c.ClubId=e.ClubId`, [eventId], (err, data) => {
         db.query(` SELECT * FROM venueman WHERE VenueId = (Select VenueId from event where EventId='` + eventId + "')",
@@ -83,7 +84,7 @@ sendEmailToVenueManagers = function (eventId) {
     });
 }
 
-router.post("/approve", (req, res, next) => {
+router.post("/approve", verifyToken, (req, res, next) => {
     const id = req.body.id;
     const status = req.body.status;
     const user = req.body.user;
@@ -93,31 +94,31 @@ router.post("/approve", (req, res, next) => {
                 res.status(400)
             else {
 
-                db.query("select c.ClubId,c.ClubName,e.EventName from event e, club c where e.EventId = ? and c.ClubId=e.ClubId",[id],(err2,data2)=>{
-                    if(data2.length!=0){
-                        db.query("select * from subscriber where ClubId = ?",[data2[0].ClubId],
-                        (err3,data3)=>{
-                            
-                            if(data3.length!=0){
-                                data3.forEach(clubSubscriber=>{
-                                    push.sendNotification(clubSubscriber.UserName, data2[0].ClubName, "New Event : "+data2[0].EventName+" scheduled",id);
-                                    fcmPush.sendNotification(clubSubscriber.UserName, data2[0].ClubName, "New Event : "+data2[0].EventName+" scheduled",id);
-                                })
-                            }
-                        })                        
+                db.query("select c.ClubId,c.ClubName,e.EventName from event e, club c where e.EventId = ? and c.ClubId=e.ClubId", [id], (err2, data2) => {
+                    if (data2.length != 0) {
+                        db.query("select * from subscriber where ClubId = ?", [data2[0].ClubId],
+                            (err3, data3) => {
+
+                                if (data3.length != 0) {
+                                    data3.forEach(clubSubscriber => {
+                                        push.sendNotification(clubSubscriber.UserName, data2[0].ClubName, "New Event : " + data2[0].EventName + " scheduled", id);
+                                        fcmPush.sendNotification(clubSubscriber.UserName, data2[0].ClubName, "New Event : " + data2[0].EventName + " scheduled", id);
+                                    })
+                                }
+                            })
                     }
                 });
 
                 const dt = new Date();
                 const DateTime = dateformat(dt);
                 const info = {
-                    EventId: id,
-                    BeforeStatus: status,
-                    AfterStatus: data[0].StatusId,
-                    DateTime: DateTime,
-                    UserName: user
-                }
-                // inserting log entry 
+                        EventId: id,
+                        BeforeStatus: status,
+                        AfterStatus: data[0].StatusId,
+                        DateTime: DateTime,
+                        UserName: user
+                    }
+                    // inserting log entry 
                 db.query("insert into statuschangelog set ?", info, (err, data2) => {
                     if (err)
                         res.status(400)
@@ -132,7 +133,7 @@ router.post("/approve", (req, res, next) => {
 })
 
 
-router.post("/rejected_by_sbg", (req, res, next) => {
+router.post("/rejected_by_sbg", verifyToken, (req, res, next) => {
     const id = req.body.id;
     const status = req.body.status;
     const user = req.body.user;
@@ -146,13 +147,13 @@ router.post("/rejected_by_sbg", (req, res, next) => {
                 const dt = new Date();
                 const DateTime = dateformat(dt);
                 const info = {
-                    EventId: id,
-                    BeforeStatus: status,
-                    AfterStatus: data[0].StatusId,
-                    DateTime: DateTime,
-                    UserName: user
-                }
-                // inserting log entry 
+                        EventId: id,
+                        BeforeStatus: status,
+                        AfterStatus: data[0].StatusId,
+                        DateTime: DateTime,
+                        UserName: user
+                    }
+                    // inserting log entry 
                 db.query("insert into statuschangelog set ?", info, (err, data2) => {
                     if (err)
                         res.status(400)
@@ -164,7 +165,7 @@ router.post("/rejected_by_sbg", (req, res, next) => {
     })
 })
 
-router.post("/rejected_by_dean", (req, res, next) => {
+router.post("/rejected_by_dean", verifyToken, (req, res, next) => {
     const id = req.body.id;
     const status = req.body.status;
     const user = req.body.user;
@@ -178,13 +179,13 @@ router.post("/rejected_by_dean", (req, res, next) => {
                 const dt = new Date();
                 const DateTime = dateformat(dt);
                 const info = {
-                    EventId: id,
-                    BeforeStatus: status,
-                    AfterStatus: data[0].StatusId,
-                    DateTime: DateTime,
-                    UserName: user
-                }
-                // inserting log entry 
+                        EventId: id,
+                        BeforeStatus: status,
+                        AfterStatus: data[0].StatusId,
+                        DateTime: DateTime,
+                        UserName: user
+                    }
+                    // inserting log entry 
                 db.query("insert into statuschangelog set ?", info, (err, data2) => {
                     if (err)
                         res.status(400)
@@ -196,7 +197,7 @@ router.post("/rejected_by_dean", (req, res, next) => {
     })
 })
 
-router.post("/complete", (req, res, next) => {
+router.post("/complete", verifyToken, (req, res, next) => {
     const id = req.body.id;
     const status = req.body.status;
     const user = req.body.user;
@@ -210,13 +211,13 @@ router.post("/complete", (req, res, next) => {
                 const dt = new Date();
                 const DateTime = dateformat(dt);
                 const info = {
-                    EventId: id,
-                    BeforeStatus: status,
-                    AfterStatus: data[0].StatusId,
-                    DateTime: DateTime,
-                    UserName: user
-                }
-                // inserting log entry 
+                        EventId: id,
+                        BeforeStatus: status,
+                        AfterStatus: data[0].StatusId,
+                        DateTime: DateTime,
+                        UserName: user
+                    }
+                    // inserting log entry 
                 db.query("insert into statuschangelog set ?", info, (err, data2) => {
                     if (err)
                         res.status(400)
@@ -229,7 +230,7 @@ router.post("/complete", (req, res, next) => {
 })
 
 
-router.post("/report", (req, res, next) => {
+router.post("/report", verifyToken, (req, res, next) => {
     const id = req.body.id;
     const status = req.body.status;
     const user = req.body.user;
@@ -243,13 +244,13 @@ router.post("/report", (req, res, next) => {
                 const dt = new Date();
                 const DateTime = dateformat(dt);
                 const info = {
-                    EventId: id,
-                    BeforeStatus: status,
-                    AfterStatus: data[0].StatusId,
-                    DateTime: DateTime,
-                    UserName: user
-                }
-                // inserting log entry 
+                        EventId: id,
+                        BeforeStatus: status,
+                        AfterStatus: data[0].StatusId,
+                        DateTime: DateTime,
+                        UserName: user
+                    }
+                    // inserting log entry 
                 db.query("insert into statuschangelog set ?", info, (err, data2) => {
                     if (err)
                         res.status(400)
@@ -261,7 +262,7 @@ router.post("/report", (req, res, next) => {
     })
 })
 
-router.post("/finish", (req, res, next) => {
+router.post("/finish", verifyToken, (req, res, next) => {
     const id = req.body.id;
     const status = req.body.status;
     const user = req.body.user;
@@ -275,13 +276,13 @@ router.post("/finish", (req, res, next) => {
                 const dt = new Date();
                 const DateTime = dateformat(dt);
                 const info = {
-                    EventId: id,
-                    BeforeStatus: status,
-                    AfterStatus: data[0].StatusId,
-                    DateTime: DateTime,
-                    UserName: user
-                }
-                // inserting log entry 
+                        EventId: id,
+                        BeforeStatus: status,
+                        AfterStatus: data[0].StatusId,
+                        DateTime: DateTime,
+                        UserName: user
+                    }
+                    // inserting log entry 
                 db.query("insert into statuschangelog set ?", info, (err, data2) => {
                     if (err)
                         res.status(400)
@@ -293,7 +294,7 @@ router.post("/finish", (req, res, next) => {
     })
 })
 
-router.get("/event_log/:id", (req, res, next) => {
+router.get("/event_log/:id", verifyToken, (req, res, next) => {
     db.query(`
         SELECT l.Name,scl.* 
         from login as l, statuschangelog as scl 
@@ -304,30 +305,29 @@ router.get("/event_log/:id", (req, res, next) => {
         if (err)
             res.status(400);
         else {
-            let count1 = 0, count2 = 0;;
+            let count1 = 0,
+                count2 = 0;;
             data.forEach((dataItem) => {
-                db.query(`select StatusName from status where StatusId=?`
-                    , [dataItem.BeforeStatus], (err, data1) => {
-                        if (err)
-                            res.status(400);
-                        else {
-                            count1++;
-                            dataItem.BeforeStatusName = data1[0].StatusName;
-                            if (count1 == data.length && count2 == data.length)
-                                res.send(data);
-                        }
-                    });
-                db.query(`select StatusName from status where StatusId=?`
-                    , [dataItem.AfterStatus], (err, data2) => {
-                        if (err)
-                            res.status(400);
-                        else {
-                            count2++;
-                            dataItem.AfterStatusName = data2[0].StatusName;
-                            if (count1 == data.length && count2 == data.length)
-                                res.send(data);
-                        }
-                    });
+                db.query(`select StatusName from status where StatusId=?`, [dataItem.BeforeStatus], (err, data1) => {
+                    if (err)
+                        res.status(400);
+                    else {
+                        count1++;
+                        dataItem.BeforeStatusName = data1[0].StatusName;
+                        if (count1 == data.length && count2 == data.length)
+                            res.send(data);
+                    }
+                });
+                db.query(`select StatusName from status where StatusId=?`, [dataItem.AfterStatus], (err, data2) => {
+                    if (err)
+                        res.status(400);
+                    else {
+                        count2++;
+                        dataItem.AfterStatusName = data2[0].StatusName;
+                        if (count1 == data.length && count2 == data.length)
+                            res.send(data);
+                    }
+                });
             });
 
 

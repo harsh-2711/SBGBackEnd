@@ -3,6 +3,7 @@ const express = require('express');
 const router = express()
 const genpassword = require("generate-password");
 const nodemailer = require('nodemailer');
+const verifyToken = require('../utils/VerifyToken');
 const transport = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -11,9 +12,7 @@ const transport = nodemailer.createTransport({
     }
 });
 
-
-
-router.post("/add_agenda", (req, res, next) => {
+router.post("/add_agenda", verifyToken, (req, res, next) => {
     console.log(req.body)
     const agenda = req.body.agenda;
     const selectedvoter = req.body.allow;
@@ -82,13 +81,13 @@ router.post("/add_agenda", (req, res, next) => {
                                         "Regards" + "\n" +
                                         "SBG-DAIICT"
                                     transport.sendMail({
-                                        to: "aman.sharma122111@gmail.com",
-                                        from: "sharma.aman1298@gmail.com",
-                                        subject: "Secret Code for Voting",
-                                        text: message
-                                    }, (err, data3) => {
+                                            to: "aman.sharma122111@gmail.com",
+                                            from: "sharma.aman1298@gmail.com",
+                                            subject: "Secret Code for Voting",
+                                            text: message
+                                        }, (err, data3) => {
 
-                                    }
+                                        }
 
                                     )
                                 }
@@ -103,7 +102,7 @@ router.post("/add_agenda", (req, res, next) => {
     })
 })
 
-router.post("/add_agenda2", (req, res, next) => {
+router.post("/add_agenda2", verifyToken, (req, res, next) => {
     console.log(req.body)
     const agenda = req.body.agenda;
     const selectedvoter = req.body.allow;
@@ -167,13 +166,13 @@ router.post("/add_agenda2", (req, res, next) => {
                             "Regards" + "\n" +
                             "SBG-DAIICT"
                         transport.sendMail({
-                            to: "aman.sharma122111@gmail.com",
-                            from: "sharma.aman1298@gmail.com",
-                            subject: "Secret Code for Voting",
-                            text: message
-                        }, (err, data3) => {
+                                to: "aman.sharma122111@gmail.com",
+                                from: "sharma.aman1298@gmail.com",
+                                subject: "Secret Code for Voting",
+                                text: message
+                            }, (err, data3) => {
 
-                        }
+                            }
 
                         )
                     }
@@ -188,7 +187,7 @@ router.post("/add_agenda2", (req, res, next) => {
 
 
 
-router.post("/add_agenda1", (req, res, next) => {
+router.post("/add_agenda1", verifyToken, (req, res, next) => {
     const agenda = req.body.agenda;
     const option1 = req.body.option1
     const option2 = req.body.option2
@@ -252,13 +251,13 @@ router.post("/add_agenda1", (req, res, next) => {
                                     "Regards" + "\n" +
                                     "SBG-DAIICT"
                                 transport.sendMail({
-                                    to: "aman.sharma122111@gmail.com",
-                                    from: "sharma.aman1298@gmail.com",
-                                    subject: "Secret Code for Voting",
-                                    text: message
-                                }, (err, data3) => {
+                                        to: "aman.sharma122111@gmail.com",
+                                        from: "sharma.aman1298@gmail.com",
+                                        subject: "Secret Code for Voting",
+                                        text: message
+                                    }, (err, data3) => {
 
-                                }
+                                    }
 
                                 )
                             }
@@ -272,7 +271,7 @@ router.post("/add_agenda1", (req, res, next) => {
 
 
 })
-router.post("/getcurrvote", (req, res, next) => {
+router.post("/getcurrvote", verifyToken, (req, res, next) => {
     db.query("select * from voting  where voting.Status=? || voting.Status=? ORDER BY VoteId ASC ", [0, 1], (err, data) => {
         if (err)
             res.status(400)
@@ -288,8 +287,7 @@ router.post("/gethistvote", (req, res, next) => {
     db.query("select * from voting where Status=?", [2], (err, data) => {
         if (err) {
             res.status(400)
-        }
-        else {
+        } else {
 
             res.send({
                 info2: data
@@ -301,7 +299,7 @@ router.post("/gethistvote", (req, res, next) => {
     })
 })
 
-router.post("/startvoting", (req, res, next) => {
+router.post("/startvoting", verifyToken, (req, res, next) => {
     const id = req.body.voteid;
     db.query("update voting set Status=? where VoteId=?", [1, id], (err, data) => {
         if (err)
@@ -314,8 +312,7 @@ router.post("/startvoting", (req, res, next) => {
                     db.query("select * from voting where Status=?", [2], (err, data2) => {
                         if (err) {
                             res.status(400)
-                        }
-                        else {
+                        } else {
                             const data3 = {
                                 info1: data1,
                                 info2: data2
@@ -330,7 +327,7 @@ router.post("/startvoting", (req, res, next) => {
     })
 })
 
-router.post("/stopvoting", (req, res, next) => {
+router.post("/stopvoting", verifyToken, (req, res, next) => {
     const id = req.body.voteid;
     db.query("select * from voteoption where VoteId=?", [id], (err, data10) => {
 
@@ -349,8 +346,7 @@ router.post("/stopvoting", (req, res, next) => {
                             db.query("select * from voting where Status=?", [2], (err, data2) => {
                                 if (err) {
                                     res.status(400)
-                                }
-                                else {
+                                } else {
                                     const data3 = {
                                         info1: data1,
                                         info2: data2,
@@ -368,7 +364,7 @@ router.post("/stopvoting", (req, res, next) => {
     })
 })
 
-router.post("/acceptagenda", (req, res, next) => {
+router.post("/acceptagenda", verifyToken, (req, res, next) => {
     console.log(req.body)
     const voteid = req.body.voteid;
     const user = req.body.user;
@@ -387,8 +383,7 @@ router.post("/acceptagenda", (req, res, next) => {
                         db.query("select IsVote from voteperson where StudentId=? && VoteId=?", [user, voteid], (err, data4) => {
                             res.send({
                                 vote: data4[0].IsVote
-                            }
-                            )
+                            })
                         })
                     }
                 })
@@ -398,7 +393,7 @@ router.post("/acceptagenda", (req, res, next) => {
 })
 
 
-router.post("/checkvote", (req, res, next) => {
+router.post("/checkvote", verifyToken, (req, res, next) => {
     console.log(req.body);
     const voteid = req.body.voteid
     const user = req.body.user
@@ -410,8 +405,7 @@ router.post("/checkvote", (req, res, next) => {
                 res.send({
                     status: 0
                 })
-            }
-            else {
+            } else {
                 res.send({
                     status: data[0].IsVote
                 })
@@ -421,7 +415,7 @@ router.post("/checkvote", (req, res, next) => {
 })
 
 
-router.post("/fetchoption", (req, res, next) => {
+router.post("/fetchoption", verifyToken, (req, res, next) => {
     const voteid = req.body.voteid;
     db.query("select Options from voteoption where VoteId=?", [voteid], (err, data1) => {
         if (err)
@@ -433,7 +427,7 @@ router.post("/fetchoption", (req, res, next) => {
     })
 })
 
-router.post("/getvotecount", (req, res, next) => {
+router.post("/getvotecount", verifyToken, (req, res, next) => {
     const voteid = req.body.id;
     db.query("select * from voteoption where VoteId=?", [voteid], (err, data2) => {
         if (err)
@@ -445,7 +439,7 @@ router.post("/getvotecount", (req, res, next) => {
 })
 
 
-router.post("/submitresult", (req, res, next) => {
+router.post("/submitresult", verifyToken, (req, res, next) => {
     const voteid = req.body.voteid
     const result = req.body.result
 

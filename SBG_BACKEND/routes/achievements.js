@@ -1,8 +1,9 @@
 const db = require("../db");
 const express = require("express");
 const router = express()
+const verifyToken = require('../utils/VerifyToken');
 
-router.post('/achievement', (req, res, next) => {
+router.post('/achievement', verifyToken, (req, res, next) => {
     db.query("Select StatusId from status where StatusName = ?", ["AchievementAdded"], (err, data) => {
         if (err)
             res.status(400);
@@ -35,64 +36,56 @@ router.post('/achievement', (req, res, next) => {
     })
 })
 
-router.get("/achievement_status/:id", (req, res, next) => {
-    db.query("select s1.* from achievements s, status s1 where s.Status=s1.StatusId and s.AchievementId=?"
-        , [req.params.id], (err, data) => {
-            if (err) {
-                console.log(err);
-                res.status(400);
-            }
-            else {
-                res.send(data);
-            }
-        });
+router.get("/achievement_status/:id", verifyToken, (req, res, next) => {
+    db.query("select s1.* from achievements s, status s1 where s.Status=s1.StatusId and s.AchievementId=?", [req.params.id], (err, data) => {
+        if (err) {
+            console.log(err);
+            res.status(400);
+        } else {
+            res.send(data);
+        }
+    });
 })
 
-router.post("/approve_achievement", (req, res, next) => {
+router.post("/approve_achievement", verifyToken, (req, res, next) => {
     db.query("select StatusId from status where StatusName = ?", ["AchievementApproved"],
         (err, data) => {
             if (err) {
                 console.log(err);
                 res.status(400);
-            }
-            else {
-                db.query("update achievements set Status=? where AchievementId=?",
-                    [data[0].StatusId, req.body.AchievementId], (err, data2) => {
-                        if (err) {
-                            console.log(err);
-                            res.status(400);
-                        }
-                        else {
-                            res.send(data2);
-                        }
-                    });
+            } else {
+                db.query("update achievements set Status=? where AchievementId=?", [data[0].StatusId, req.body.AchievementId], (err, data2) => {
+                    if (err) {
+                        console.log(err);
+                        res.status(400);
+                    } else {
+                        res.send(data2);
+                    }
+                });
             }
         });
 });
 
-router.post("/reject_achievement", (req, res, next) => {
+router.post("/reject_achievement", verifyToken, (req, res, next) => {
     db.query("select StatusId from status where StatusName = ?", ["AchievementRejected"],
         (err, data) => {
             if (err) {
                 console.log(err);
                 res.status(400);
-            }
-            else {
-                db.query("update achievements set status=? where AchievementId=?",
-                    [data[0].StatusId, req.body.AchievementId], (err, data2) => {
-                        if (err) {
-                            console.log(err);
-                            res.status(400);
-                        }
-                        else {
-                            res.send(data2);
-                        }
-                    });
+            } else {
+                db.query("update achievements set status=? where AchievementId=?", [data[0].StatusId, req.body.AchievementId], (err, data2) => {
+                    if (err) {
+                        console.log(err);
+                        res.status(400);
+                    } else {
+                        res.send(data2);
+                    }
+                });
             }
         });
 });
 
-router.get('/approved_achievements', (req, res, next) => {
+router.get('/approved_achievements', verifyToken, (req, res, next) => {
     db.query("Select * from achievements where Status=20", (err, data) => {
         if (err)
             res.status(400);
@@ -100,7 +93,7 @@ router.get('/approved_achievements', (req, res, next) => {
             res.send(data);
     })
 })
-router.get('/requested_achievements', (req, res, next) => {
+router.get('/requested_achievements', verifyToken, (req, res, next) => {
     db.query("Select * from achievements where Status=19", (err, data) => {
         if (err)
             res.status(400);
@@ -109,30 +102,26 @@ router.get('/requested_achievements', (req, res, next) => {
     })
 })
 
-router.get("/achievement/:id", (req, res, next) => {
-    db.query("Select * from achievements where AchievementId=?"
-        , [req.params.id], (err, data) => {
-            if (err) {
-                console.log(err);
-                res.status(400);
-            }
-            else {
-                res.send(data);
-            }
-        })
+router.get("/achievement/:id", verifyToken, (req, res, next) => {
+    db.query("Select * from achievements where AchievementId=?", [req.params.id], (err, data) => {
+        if (err) {
+            console.log(err);
+            res.status(400);
+        } else {
+            res.send(data);
+        }
+    })
 });
 
-router.get("/winners/:id", (req, res, next) => {
-    db.query("Select * from achievementwinners where AchievementId=?"
-        , [req.params.id], (err, data) => {
-            if (err) {
-                console.log(err);
-                res.status(400);
-            }
-            else {
-                res.send(data);
-            }
-        })
+router.get("/winners/:id", verifyToken, (req, res, next) => {
+    db.query("Select * from achievementwinners where AchievementId=?", [req.params.id], (err, data) => {
+        if (err) {
+            console.log(err);
+            res.status(400);
+        } else {
+            res.send(data);
+        }
+    })
 });
 
 module.exports = router

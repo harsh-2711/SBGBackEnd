@@ -2,6 +2,10 @@ const db = require('../db')
 const express = require('express');
 const genpassword = require("generate-password");
 const nodemailer = require('nodemailer');
+const VerifyToken = require('../utils/VerifyToken');
+const jwt = require('jsonwebtoken');
+const config = require('../utils/config.json');
+
 const transport = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -19,10 +23,9 @@ router.post("/register", (req, res, next) => {
     let roleId;
     let email = req.body.username;
     email = email.replace('@daiict.ac.in', '');
-    if (isNumeric(email)) {    // user is students
+    if (isNumeric(email)) { // user is students
         roleId = 3;
-    }
-    else {
+    } else {
         roleId = 10;
     }
     const postdata = {
@@ -38,9 +41,17 @@ router.post("/register", (req, res, next) => {
             if (err) {
                 res.status(400);
                 console.log(err);
+            } else {
+                var token = jwt.sign({ id: roleId }, config.secret, {
+                    expiresIn: 3600 // expires in an hour
+                });
+                res.send({
+                    userRole: roleId,
+                    name: req.body.name,
+                    reset: 0,
+                    token: token
+                });
             }
-            else
-                res.send("Registered Successfully");
         });
 });
 
@@ -51,26 +62,28 @@ router.post("/login", (req, res, next) => {
     console.log(req.body)
     const username = req.body.username
     const password = req.body.password
-    req.session.username=username
+    req.session.username = username
     db.query("select * from login where UserName=? && PassWord=?", [username, password], (err, data) => {
         console.log(data);
         if ((data != null || data != undefined) && data.length < 1) {
             res.status(400);
-        }
-        else {
+        } else {
             console.log(data);
             const name = data[0].Name;
             const isReset = data[0].IsReset;
             db.query("select RoleName from role where RoleId = ?", [data[0].RoleId], (err, data) => {
                 if (err) {
                     console.log("Error in login.js");
-                }
-                else {
+                } else {
+                    var token = jwt.sign({ id: data[0].RoleId }, config.secret, {
+                        expiresIn: 3600 // expires in an hour
+                    });
                     req.session.username = username;
                     res.send({
                         userRole: data[0].RoleName,
                         name: name,
-                        reset: isReset
+                        reset: isReset,
+                        token: token
                     });
                 }
             });
